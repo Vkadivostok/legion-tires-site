@@ -2146,3 +2146,205 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 1rem;
 }
 
+/* ==========================================================================
+   Mobile Optimization Overrides (max-width: 576px)
+   ========================================================================== */
+@media (max-width: 576px) {
+    .container {
+        padding: 0 16px;
+    }
+    
+    /* Header & Logo */
+    .header {
+        height: 65px !important;
+    }
+    .logo {
+        font-size: 1.3rem;
+    }
+    .phone-link span {
+        display: none; /* Hide phone text on small mobile, keep icon only */
+    }
+    .phone-link i {
+        font-size: 1.2rem;
+        background: rgba(0, 242, 254, 0.1);
+        padding: 10px;
+        border-radius: 50%;
+        border: 1px solid var(--color-border-glow);
+    }
+    .nav-actions {
+        gap: 12px;
+    }
+    .nav-menu {
+        top: 65px;
+        height: calc(100vh - 65px);
+    }
+    
+    /* Hero Section */
+    .hero {
+        padding-top: 100px;
+        padding-bottom: 40px;
+        min-height: auto;
+    }
+    .hero-title {
+        font-size: 2.1rem;
+    }
+    .hero-subtitle {
+        font-size: 1rem;
+        margin-bottom: 24px;
+    }
+    .hero-image-wrapper {
+        width: 280px;
+        height: 280px;
+        margin: 0 auto;
+    }
+    .hero-stats {
+        gap: 16px;
+        flex-wrap: wrap;
+        width: 100%;
+        justify-content: space-around;
+        margin-bottom: 30px;
+    }
+    .stat-num {
+        font-size: 1.6rem;
+    }
+    .hero-actions {
+        flex-direction: column;
+        width: 100%;
+        gap: 12px;
+    }
+    .btn-large {
+        padding: 14px 28px;
+        font-size: 1rem;
+        width: 100%;
+    }
+    
+    /* Services Section */
+    .services {
+        padding: 60px 0;
+    }
+    .service-img-wrapper {
+        height: 200px;
+    }
+    .service-body {
+        padding: 30px 20px;
+    }
+    .service-icon {
+        left: 20px;
+    }
+    
+    /* Visualizer Section */
+    .visualizer-section {
+        padding: 60px 0;
+    }
+    .visualizer-display {
+        padding: 20px 10px;
+        min-height: auto;
+    }
+    .visualizer-preview-container {
+        width: 260px;
+        height: 260px;
+    }
+    .color-groups {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns fits better than 1 on small mobile */
+        gap: 8px;
+    }
+    .color-selector {
+        padding: 10px;
+        gap: 8px;
+    }
+    .color-name {
+        font-size: 0.8rem;
+    }
+    .finish-options {
+        flex-direction: column;
+        gap: 8px;
+    }
+    .visualizer-cta-box {
+        padding: 16px;
+    }
+    
+    /* Calculator Section */
+    .calculator-section {
+        padding: 60px 0;
+    }
+    .calculator-panel {
+        padding: 24px 16px;
+    }
+    .diameter-selector {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .addon-checkbox-label {
+        padding: 12px 14px;
+    }
+    .addon-name {
+        font-size: 0.85rem;
+    }
+    .addon-desc {
+        font-size: 0.75rem;
+    }
+    .addon-price {
+        font-size: 0.85rem;
+    }
+    .consumable-item {
+        padding: 10px 14px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    .qty-counter-small {
+        margin-right: 0;
+    }
+    .item-rate {
+        align-self: flex-end;
+    }
+    .calculator-result-card {
+        padding: 24px 16px;
+    }
+    .total-price {
+        font-size: 1.8rem;
+    }
+    
+    /* Contacts & Forms */
+    .contacts-section {
+        padding: 60px 0;
+    }
+    .contact-form-panel {
+        padding: 30px 16px;
+    }
+    .map-container-wrapper {
+        height: 200px;
+    }
+    
+    /* Footer */
+    .footer {
+        padding-top: 40px;
+    }
+    .footer-grid {
+        gap: 30px;
+        margin-bottom: 40px;
+    }
+    
+    /* Toast notifications */
+    .toast-container {
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+    }
+    .toast {
+        min-width: 100%;
+        padding: 12px 16px;
+    }
+}
+
+@media (max-width: 360px) {
+    .color-groups {
+        grid-template-columns: 1fr;
+    }
+    .diameter-selector {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .hero-title {
+        font-size: 1.8rem;
+    }
+}
+
