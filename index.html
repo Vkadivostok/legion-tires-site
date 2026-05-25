@@ -245,38 +245,31 @@
                 </div>
             </div>
 
-            <div class="process-video-reel reveal-item" aria-label="Видео процессов сервиса Легион">
-                <article class="process-video-card">
-                    <div class="process-video-frame">
-                        <video class="process-video" muted loop playsinline preload="metadata" poster="images/tire_fitting.png">
-                            <source src="videos/service-installation.mp4" type="video/mp4">
-                        </video>
-                    </div>
-                </article>
+            <div class="process-video-panel reveal-item" aria-label="Видео процессов сервиса Легион">
+                <div class="process-video-frame">
+                    <video class="process-video" id="processVideo" autoplay muted loop playsinline preload="metadata" poster="images/tire_fitting.png">
+                        <source src="videos/service-installation.mp4" type="video/mp4">
+                    </video>
+                </div>
 
-                <article class="process-video-card">
-                    <div class="process-video-frame">
-                        <video class="process-video" muted loop playsinline preload="metadata" poster="images/hero_wheel.png">
-                            <source src="videos/wheel-spin-clean.mp4" type="video/mp4">
-                        </video>
-                    </div>
-                </article>
-
-                <article class="process-video-card">
-                    <div class="process-video-frame">
-                        <video class="process-video" muted loop playsinline preload="metadata" poster="images/powder_paint_base.png">
-                            <source src="videos/wheel-before-after.mp4" type="video/mp4">
-                        </video>
-                    </div>
-                </article>
-
-                <article class="process-video-card">
-                    <div class="process-video-frame">
-                        <video class="process-video" muted loop playsinline preload="metadata" poster="images/hero_wheel.png">
-                            <source src="videos/legion-brand-motion.mp4" type="video/mp4">
-                        </video>
-                    </div>
-                </article>
+                <div class="process-video-tabs" aria-label="Выбор видео">
+                    <button class="process-video-tab active" type="button" data-video-src="videos/service-installation.mp4" aria-pressed="true">
+                        <i class="fa-solid fa-car-side"></i>
+                        <span>На машину</span>
+                    </button>
+                    <button class="process-video-tab" type="button" data-video-src="videos/wheel-spin-clean.mp4" aria-pressed="false">
+                        <i class="fa-solid fa-compact-disc"></i>
+                        <span>Вращение</span>
+                    </button>
+                    <button class="process-video-tab" type="button" data-video-src="videos/wheel-before-after.mp4" aria-pressed="false">
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                        <span>До / после</span>
+                    </button>
+                    <button class="process-video-tab" type="button" data-video-src="videos/legion-brand-motion.mp4" aria-pressed="false">
+                        <i class="fa-solid fa-bolt"></i>
+                        <span>Legion</span>
+                    </button>
+                </div>
             </div>
         </div>
     </section>
