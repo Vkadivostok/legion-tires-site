@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize elements
     initNavigation();
     initCatalog();
+    initProcessVideo();
     initVisualizer();
     initCalculator();
     initContactForm();
@@ -83,7 +84,55 @@ function initNavigation() {
 }
 
 /* ==========================================================================
-   2. Catalog Section (Data Store, Rendering, Filtering)
+   2. Process Video Showcase
+   ========================================================================== */
+function initProcessVideo() {
+    const video = document.getElementById('processVideo');
+    const title = document.getElementById('processVideoTitle');
+    const tabs = document.querySelectorAll('.process-video-tab');
+
+    if (!video || !title || tabs.length === 0) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+        video.removeAttribute('autoplay');
+        video.controls = true;
+        video.pause();
+    }
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const src = tab.getAttribute('data-video-src');
+            const nextTitle = tab.getAttribute('data-video-title');
+
+            if (!src || video.currentSrc.endsWith(src)) return;
+
+            tabs.forEach(item => {
+                item.classList.remove('active');
+                item.setAttribute('aria-pressed', 'false');
+            });
+
+            tab.classList.add('active');
+            tab.setAttribute('aria-pressed', 'true');
+            title.textContent = nextTitle || '';
+            video.classList.add('is-switching');
+
+            window.setTimeout(() => {
+                video.innerHTML = `<source src="${src}" type="video/mp4">`;
+                video.load();
+
+                if (!prefersReducedMotion) {
+                    video.play().catch(() => {});
+                }
+
+                video.classList.remove('is-switching');
+            }, 160);
+        });
+    });
+}
+
+/* ==========================================================================
+   3. Catalog Section (Data Store, Rendering, Filtering)
    ========================================================================== */
 
 // Tires Mock Database (Kazan branch stock)

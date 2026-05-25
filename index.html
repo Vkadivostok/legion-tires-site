@@ -89,6 +89,7 @@
             </a>
             <nav class="nav-menu" id="navMenu">
                 <a href="#services" class="nav-link">Услуги</a>
+                <a href="#process" class="nav-link">Видео</a>
                 <a href="#catalog" class="nav-link">Каталог</a>
                 <a href="#visualizer" class="nav-link">Покраска Дисков</a>
                 <a href="#calculator" class="nav-link">Калькулятор</a>
@@ -199,6 +200,79 @@
                             <a href="#visualizer" class="btn btn-outline btn-sm">Выбрать цвет онлайн</a>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Video Section -->
+    <section class="process-video-section" id="process">
+        <div class="process-video-glow"></div>
+        <div class="container process-video-grid">
+            <div class="process-copy reveal-item">
+                <span class="section-tagline">Живой процесс</span>
+                <h2 class="section-title">Показываем работу, а не обещания</h2>
+                <div class="title-underline left-align"></div>
+                <p class="process-intro">Короткие видео помогают увидеть аккуратность мастеров, состояние оборудования и результат до записи. Выберите нужный этап и посмотрите, как выглядит сервис «Легион» в работе.</p>
+
+                <div class="process-points">
+                    <div class="process-point">
+                        <i class="fa-solid fa-gauge-high"></i>
+                        <div>
+                            <strong>Быстрая диагностика</strong>
+                            <span>Проверяем колесо, геометрию диска и состояние резины до начала работ.</span>
+                        </div>
+                    </div>
+                    <div class="process-point">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <div>
+                            <strong>Бережная работа</strong>
+                            <span>Защищаем поверхность диска и используем подходящие расходные материалы.</span>
+                        </div>
+                    </div>
+                    <div class="process-point">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <div>
+                            <strong>Понятный результат</strong>
+                            <span>Показываем, что изменилось, и согласуем дальнейшие действия с владельцем.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="process-actions">
+                    <a href="#contacts" class="btn btn-primary btn-large">Записаться на сервис</a>
+                    <a href="#calculator" class="btn btn-outline btn-large">Рассчитать стоимость</a>
+                </div>
+            </div>
+
+            <div class="process-video-panel reveal-item" aria-label="Видео процессов сервиса Легион">
+                <div class="process-video-frame">
+                    <video class="process-video" id="processVideo" autoplay muted loop playsinline preload="metadata" poster="images/tire_fitting.png">
+                        <source src="videos/service-installation.mp4" type="video/mp4">
+                    </video>
+                    <div class="process-video-overlay">
+                        <span class="process-video-kicker">Сейчас в кадре</span>
+                        <strong id="processVideoTitle">Установка колеса на автомобиль</strong>
+                    </div>
+                </div>
+
+                <div class="process-video-tabs" aria-label="Выбор видео">
+                    <button class="process-video-tab active" type="button" data-video-src="videos/service-installation.mp4" data-video-title="Установка колеса на автомобиль" aria-pressed="true">
+                        <i class="fa-solid fa-car-side"></i>
+                        <span>На машину</span>
+                    </button>
+                    <button class="process-video-tab" type="button" data-video-src="videos/wheel-spin-clean.mp4" data-video-title="Чистое вращение диска без лишних надписей" aria-pressed="false">
+                        <i class="fa-solid fa-compact-disc"></i>
+                        <span>Вращение</span>
+                    </button>
+                    <button class="process-video-tab" type="button" data-video-src="videos/wheel-before-after.mp4" data-video-title="Сравнение старого и обновленного колеса" aria-pressed="false">
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                        <span>До / после</span>
+                    </button>
+                    <button class="process-video-tab" type="button" data-video-src="videos/legion-brand-motion.mp4" data-video-title="Фирменная заставка Легион" aria-pressed="false">
+                        <i class="fa-solid fa-bolt"></i>
+                        <span>Legion</span>
+                    </button>
                 </div>
             </div>
         </div>
