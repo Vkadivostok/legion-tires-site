@@ -694,9 +694,9 @@ h1, h2, h3, h4, h5, h6 {
     position: relative;
     z-index: 2;
     display: grid;
-    grid-template-columns: 0.86fr 1.14fr;
+    grid-template-columns: 0.78fr 1.22fr;
     gap: 56px;
-    align-items: center;
+    align-items: start;
 }
 
 .process-copy .section-title {
@@ -760,18 +760,23 @@ h1, h2, h3, h4, h5, h6 {
     flex-wrap: wrap;
 }
 
-.process-video-panel {
+.process-video-reel {
+    display: grid;
+    gap: 18px;
+}
+
+.process-video-card {
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius-lg);
     background: linear-gradient(180deg, rgba(26, 29, 40, 0.78), rgba(10, 11, 14, 0.92));
-    box-shadow: 0 32px 80px -42px rgba(0, 242, 254, 0.38);
-    padding: 14px;
+    box-shadow: 0 28px 70px -48px rgba(0, 242, 254, 0.34);
+    padding: 12px;
 }
 
 .process-video-frame {
     position: relative;
     overflow: hidden;
-    aspect-ratio: 16 / 10;
+    aspect-ratio: 16 / 9;
     border-radius: 18px;
     background: #050607;
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -786,93 +791,14 @@ h1, h2, h3, h4, h5, h6 {
     transition: opacity 180ms ease, transform 420ms ease;
 }
 
-.process-video.is-switching {
-    opacity: 0;
-    transform: scale(1.02);
-}
-
 .process-video-frame::after {
     content: '';
     position: absolute;
     inset: 0;
     background:
-        linear-gradient(180deg, transparent 46%, rgba(0, 0, 0, 0.76) 100%),
-        linear-gradient(90deg, rgba(0, 242, 254, 0.16), transparent 32%, rgba(255, 123, 0, 0.12));
+        linear-gradient(180deg, rgba(0, 0, 0, 0.08), transparent 34%, rgba(0, 0, 0, 0.12)),
+        linear-gradient(90deg, rgba(0, 242, 254, 0.1), transparent 32%, rgba(255, 123, 0, 0.08));
     pointer-events: none;
-}
-
-.process-video-overlay {
-    position: absolute;
-    left: 22px;
-    right: 22px;
-    bottom: 20px;
-    z-index: 2;
-    display: grid;
-    gap: 4px;
-}
-
-.process-video-kicker {
-    color: var(--color-primary);
-    font-size: 0.76rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-}
-
-.process-video-overlay strong {
-    color: #fff;
-    font-family: var(--font-heading);
-    font-size: clamp(1.1rem, 2vw, 1.7rem);
-    line-height: 1.08;
-}
-
-.process-video-tabs {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 10px;
-    margin-top: 12px;
-}
-
-.process-video-tab {
-    min-height: 76px;
-    display: grid;
-    align-content: center;
-    justify-items: center;
-    gap: 7px;
-    padding: 12px 8px;
-    border-radius: var(--border-radius-sm);
-    border: 1px solid var(--color-border);
-    background: rgba(255, 255, 255, 0.035);
-    color: var(--color-text-muted);
-    cursor: pointer;
-    transition: var(--transition-smooth);
-}
-
-.process-video-tab i {
-    color: var(--color-primary);
-    font-size: 1.1rem;
-}
-
-.process-video-tab span {
-    font-size: 0.84rem;
-    font-weight: 700;
-    line-height: 1.15;
-    text-align: center;
-}
-
-.process-video-tab:hover,
-.process-video-tab:focus-visible {
-    border-color: rgba(0, 242, 254, 0.42);
-    background: rgba(0, 242, 254, 0.07);
-    color: #fff;
-    outline: none;
-}
-
-.process-video-tab.active {
-    border-color: var(--color-primary);
-    background: rgba(0, 242, 254, 0.12);
-    color: #fff;
-    box-shadow: 0 0 16px rgba(0, 242, 254, 0.16);
 }
 
 /* 8. Powder Coating Visualizer Section */
@@ -2161,7 +2087,6 @@ h1, h2, h3, h4, h5, h6 {
     .filter-toolbar { flex-direction: column; align-items: stretch; }
     
     .color-groups { grid-template-columns: 1fr; }
-    .process-video-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .process-actions .btn { flex: 1 1 220px; }
     
     .info-card-content { margin-bottom: 20px; }
@@ -2475,28 +2400,13 @@ h1, h2, h3, h4, h5, h6 {
         flex-direction: column;
         margin-top: 28px;
     }
-    .process-video-panel {
+    .process-video-card {
         padding: 10px;
         border-radius: var(--border-radius-md);
     }
     .process-video-frame {
         aspect-ratio: 4 / 5;
         border-radius: 12px;
-    }
-    .process-video-overlay {
-        left: 14px;
-        right: 14px;
-        bottom: 14px;
-    }
-    .process-video-tabs {
-        gap: 8px;
-    }
-    .process-video-tab {
-        min-height: 62px;
-        padding: 10px 6px;
-    }
-    .process-video-tab span {
-        font-size: 0.78rem;
     }
     
     /* Visualizer Section */
