@@ -1,0 +1,4550 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111111">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="v RASHOD">
+  <link rel="manifest" href="expenses-manifest.json">
+  <link rel="icon" type="image/jpeg" href="Logo.png">
+  <link rel="apple-touch-icon" href="Logo.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <title>v RASHOD</title>
+  <style>
+    :root {
+      --bg-1: #09192a;
+      --bg-2: #11324c;
+      --surface: rgba(255, 255, 255, 0.9);
+      --text: #0e2438;
+      --muted: #4d6176;
+      --brand: #0b2f51;
+      --brand-strong: #0d4e7f;
+      --accent: #00a8a8;
+      --danger: #cb2f4f;
+      --line: #d4e3f1;
+      --shadow: 0 16px 36px rgba(3, 24, 43, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      font-family: "Verdana", "Segoe UI", "Tahoma", sans-serif;
+      color: var(--text);
+      background: linear-gradient(140deg, #07111d 0%, #0d2b44 55%, #16527d 100%);
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      display: none;
+    }
+
+    .desktop-logo {
+      display: none;
+      position: fixed;
+      left: 24px;
+      top: 24px;
+      width: 92px;
+      height: 92px;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+      overflow: visible;
+      z-index: 2;
+      animation: logoPulse 3.8s ease-in-out infinite;
+    }
+
+    .desktop-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      animation: logoSpin 18s linear infinite;
+      filter: drop-shadow(0 12px 18px rgba(6, 24, 40, 0.45));
+    }
+
+    @keyframes logoPulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 16px 32px rgba(6, 24, 40, 0.35);
+      }
+      50% {
+        transform: scale(1.06);
+        box-shadow: 0 20px 40px rgba(6, 24, 40, 0.45);
+      }
+    }
+
+    @keyframes logoSpin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .app {
+      position: relative;
+      z-index: 1;
+      margin: 0 auto;
+      width: 100%;
+      max-width: 520px;
+      padding: 18px 14px calc(84px + env(safe-area-inset-bottom));
+      display: grid;
+      gap: 14px;
+    }
+
+    .mobile-quick-nav {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .mobile-nav-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.09));
+      color: #e8f5ff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      text-decoration: none;
+    }
+
+    .session-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #e8f5ff;
+      background: rgba(8, 32, 52, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 12px;
+      padding: 8px 10px;
+      font-size: 0.8rem;
+    }
+
+    .session-bar.bottom-session {
+      margin-top: 6px;
+    }
+
+    .session-user-login {
+      color: #d93044;
+      font-weight: 800;
+    }
+
+    .self-user-select {
+      color: #d93044;
+      font-weight: 800;
+    }
+
+    .self-user-select:disabled {
+      color: #d93044;
+      -webkit-text-fill-color: #d93044;
+      opacity: 1;
+    }
+
+    body.super-mode .mobile-quick-nav {
+      background: linear-gradient(135deg, #ff8a1f, #ffb347);
+      padding: 10px;
+      border-radius: 16px;
+      box-shadow: 0 12px 22px rgba(147, 70, 0, 0.25);
+    }
+
+    body.super-mode .mobile-nav-btn {
+      border-color: rgba(255, 255, 255, 0.7);
+      background: rgba(255, 255, 255, 0.65);
+      color: #2b1400;
+    }
+
+    body.super-mode .session-bar {
+      background: rgba(255, 156, 64, 0.35);
+      border-color: rgba(255, 188, 122, 0.7);
+      color: #2b1400;
+    }
+
+    .readonly-banner {
+      margin: 10px 0 4px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px dashed rgba(13, 78, 127, 0.45);
+      background: rgba(237, 246, 255, 0.85);
+      color: #134062;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .logout-btn {
+      min-height: 34px;
+      padding: 6px 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      background: rgba(255, 255, 255, 0.14);
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .install-btn {
+      position: fixed;
+      right: 12px;
+      bottom: calc(18px + env(safe-area-inset-bottom));
+      z-index: 150;
+      min-height: 40px;
+      padding: 8px 12px;
+      border: 0;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #0f6ca8, #0a4a79);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      box-shadow: 0 10px 20px rgba(6, 28, 48, 0.35);
+    }
+
+    .auth-gate {
+      position: fixed;
+      inset: 0;
+      z-index: 180;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: linear-gradient(rgba(54, 18, 9, 0.8), rgba(54, 18, 9, 0.82)), url("Logo.png") center center / cover no-repeat;
+    }
+
+    .auth-gate.show {
+      display: flex;
+    }
+
+    .auth-card {
+      width: min(100%, 430px);
+      background: #fff6ef;
+      border: 1px solid #edc6ab;
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 18px 35px rgba(34, 14, 7, 0.34);
+      display: grid;
+      gap: 10px;
+    }
+
+    .auth-page-label {
+      margin: 2px 0 6px;
+      text-align: center;
+      font-size: clamp(34px, 8vw, 50px);
+      line-height: 1;
+      letter-spacing: 7px;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: #8b2f10;
+      text-shadow: 0 10px 22px rgba(128, 46, 14, 0.22);
+    }
+
+    .auth-title {
+      margin: 0;
+      color: #7a2f13;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .auth-subtitle {
+      margin: 0;
+      color: #8a5d4b;
+      font-size: 0.86rem;
+    }
+
+    .auth-error {
+      min-height: 18px;
+      color: #b02f43;
+      font-size: 0.82rem;
+    }
+
+    .auth-error.auth-invalid-big {
+      min-height: 58px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 2px solid #fff3d8;
+      background: linear-gradient(120deg, #ff2a47 0%, #ff8e1a 46%, #ffd84f 100%);
+      color: #4f0a0a;
+      font-size: clamp(1.02rem, 3.8vw, 1.22rem);
+      font-weight: 900;
+      line-height: 1.25;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      -webkit-text-stroke: 0.35px rgba(255, 255, 255, 0.75);
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.82), 0 2px 0 rgba(255, 221, 165, 0.8), 0 4px 8px rgba(77, 12, 12, 0.35);
+      box-shadow: 0 10px 20px rgba(145, 19, 19, 0.28), 0 0 0 1px rgba(255, 255, 255, 0.45) inset;
+    }
+
+    .auth-success {
+      min-height: 18px;
+      color: #1f7a45;
+      font-size: 0.82rem;
+    }
+
+    .auth-switch {
+      border: 0;
+      background: transparent;
+      color: #8a3516;
+      font-size: 0.83rem;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      padding: 2px 0;
+      justify-self: start;
+      min-height: auto;
+    }
+
+    .auth-inline-link {
+      border: 0;
+      background: transparent;
+      color: #8b2f10;
+      font-size: 0.84rem;
+      font-weight: 700;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      padding: 0;
+      min-height: auto;
+      justify-self: start;
+    }
+
+    .auth-reminder {
+      display: grid;
+      gap: 8px;
+      padding-top: 8px;
+      border-top: 1px solid #efd8ca;
+      margin-top: 4px;
+    }
+
+    .auth-reminder-text {
+      margin: 0;
+      color: #8a5d4b;
+      font-size: 0.82rem;
+    }
+
+    .auth-reminder .btn-secondary {
+      width: 100%;
+      min-height: 44px;
+      font-size: 0.88rem;
+      background: linear-gradient(180deg, #fff8f2, #ffe9db);
+      border: 1px solid #f0c4a9;
+      color: #7d2e10;
+    }
+
+    .auth-card .btn-primary {
+      background: linear-gradient(135deg, #ef6b2f, #b93a16);
+      border: 1px solid rgba(141, 45, 16, 0.65);
+      box-shadow: 0 10px 18px rgba(99, 28, 10, 0.3);
+    }
+
+    .auth-card .btn-primary:hover,
+    .auth-card .btn-primary:focus-visible {
+      background: linear-gradient(135deg, #d25624, #932f12);
+    }
+
+    .auth-card input:focus,
+    .auth-card select:focus,
+    .auth-card textarea:focus {
+      border-color: rgba(219, 106, 57, 0.8);
+      box-shadow: 0 0 0 3px rgba(219, 106, 57, 0.2);
+    }
+
+    .auth-reset-form[hidden] {
+      display: none;
+    }
+
+    .brand-strip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      margin: 2px auto 0;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.36);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.08));
+      color: #e9f6ff;
+      font-size: 0.76rem;
+      letter-spacing: 2.2px;
+      font-weight: 700;
+      text-transform: uppercase;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .brand-strip:hover {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.14));
+    }
+
+    .brand-strip:focus-visible {
+      outline: 2px solid rgba(255, 255, 255, 0.7);
+      outline-offset: 2px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      border-radius: 20px;
+      box-shadow: 0 8px 18px rgba(3, 24, 43, 0.14);
+      padding: 14px;
+    }
+
+    .expense-card {
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.45) inset, 0 10px 20px rgba(5, 27, 50, 0.18);
+    }
+
+    .expense-card::before {
+      display: none;
+    }
+
+    .card h2 {
+      margin: 0 0 12px;
+      font-size: 1.02rem;
+      letter-spacing: 0.4px;
+      color: #0a3b63;
+    }
+
+    .spoiler {
+      overflow: hidden;
+    }
+
+    .spoiler > summary {
+      list-style: none;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.96rem;
+      margin: -2px -2px 10px;
+      padding: 4px 2px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.45px;
+      color: #0a3b63;
+    }
+
+    .spoiler > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .spoiler > summary::after {
+      content: "▾";
+      color: #51617a;
+      transition: transform 0.2s ease;
+      font-size: 0.9rem;
+    }
+
+    .spoiler[open] > summary::after {
+      transform: rotate(180deg);
+    }
+
+    .spoiler[open] > :not(summary) {
+      transform-origin: top;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .form-row {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .form-row.full {
+      grid-column: 1 / -1;
+    }
+
+    .field-hint {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .form-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      position: sticky;
+      bottom: calc(8px + env(safe-area-inset-bottom));
+      z-index: 4;
+      background: linear-gradient(180deg, rgba(248, 252, 255, 0.7), rgba(233, 244, 255, 0.92));
+      border: 1px solid rgba(188, 213, 235, 0.7);
+      border-radius: 14px;
+      padding: 8px;
+    }
+
+    label {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    input,
+    select,
+    button,
+    textarea {
+      font: inherit;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 11px;
+      background: rgba(255, 255, 255, 0.96);
+      color: var(--text);
+      outline: none;
+      min-height: 46px;
+      font-size: 16px;
+      max-width: 100%;
+      min-width: 0;
+    }
+
+    .app,
+    .card,
+    .form-grid,
+    .form-row,
+    .mobile-quick-nav,
+    .photo-pickers,
+    .photo-grid,
+    .expense,
+    .expense-top,
+    .expense-meta,
+    .expense-meta-left,
+    .expense-actions {
+      min-width: 0;
+    }
+
+    .expense-actions {
+      flex-wrap: wrap;
+    }
+
+    textarea {
+      min-height: 68px;
+      resize: vertical;
+    }
+
+    .suggestions {
+      display: grid;
+      gap: 6px;
+      margin-top: 6px;
+      padding: 8px;
+      border: 1px solid #d6e3ef;
+      border-radius: 12px;
+      background: rgba(248, 252, 255, 0.96);
+      box-shadow: 0 10px 22px rgba(8, 31, 52, 0.08);
+    }
+
+    .suggestions[hidden] {
+      display: none;
+    }
+
+    .suggestions-title {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .suggestion-btn {
+      width: 100%;
+      min-height: 0;
+      padding: 8px 10px;
+      border: 1px solid #d7e4ef;
+      border-radius: 10px;
+      background: #ffffff;
+      color: var(--text);
+      text-align: left;
+      font-size: 0.9rem;
+      line-height: 1.35;
+    }
+
+    .suggestion-btn:hover,
+    .suggestion-btn:focus-visible {
+      border-color: rgba(0, 168, 168, 0.65);
+      background: #f3fbfb;
+    }
+
+    .search-row label {
+      color: #8c7a2b;
+    }
+
+    .search-controls {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .search-row input {
+      background: #fff9d8;
+      border-color: #e4d58b;
+    }
+
+    .search-row input:focus {
+      border-color: #d6c15c;
+      box-shadow: 0 0 0 3px rgba(214, 193, 92, 0.2);
+    }
+
+    .note-row textarea {
+      background: #e8f6e8;
+      border-color: #b9d9b9;
+      resize: none;
+      overflow: hidden;
+      min-height: 96px;
+    }
+
+    .note-row textarea:focus {
+      border-color: #8fc18f;
+      box-shadow: 0 0 0 3px rgba(143, 193, 143, 0.18);
+    }
+
+    .search-clear-btn {
+      min-height: 46px;
+      padding: 10px 12px;
+      border: 1px solid #d7c66d;
+      border-radius: 12px;
+      background: #f4e8a8;
+      color: #6c5b15;
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .search-clear-btn:focus-visible,
+    .search-clear-btn:hover {
+      border-color: #c8b24b;
+      background: #efdf8e;
+    }
+
+    .filters-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin: 0 0 12px;
+    }
+
+    .filters-reset-btn {
+      min-height: 40px;
+      padding: 8px 12px;
+      border: 1px solid #c8dced;
+      border-radius: 12px;
+      background: #eef6fd;
+      color: #1f486d;
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .filters-reset-btn:hover,
+    .filters-reset-btn:focus-visible {
+      border-color: #a8c8e2;
+      background: #e1effb;
+    }
+
+    .stat.is-clickable {
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    }
+
+    .stat.is-clickable:hover,
+    .stat.is-clickable:focus-visible {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(8, 31, 52, 0.08);
+      border-color: #9ec6e6;
+    }
+
+    .stat.is-active {
+      border-color: #0d4e7f;
+      background: linear-gradient(180deg, #eef7ff, #dbeeff);
+      box-shadow: 0 8px 18px rgba(13, 78, 127, 0.14);
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: rgba(0, 168, 168, 0.75);
+      box-shadow: 0 0 0 3px rgba(0, 168, 168, 0.14);
+    }
+
+    .btn-primary {
+      border: 0;
+      background: linear-gradient(135deg, var(--brand), var(--brand-strong));
+      color: #fff;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      box-shadow: 0 10px 18px rgba(11, 47, 81, 0.35);
+    }
+
+    .btn-primary:active,
+    .btn-secondary:active,
+    .chip:active,
+    .icon-btn:active {
+      transform: none;
+    }
+
+    .segmented {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      background: #f8fafc;
+      color: #3d4658;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      padding: 7px 6px;
+      min-height: auto;
+      text-align: center;
+    }
+
+    .chip.active {
+      background: #eef1f4;
+      border-color: #c7d0db;
+      color: #202833;
+      font-weight: 700;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .stat {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 9px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(240, 248, 255, 0.82));
+    }
+
+    .stat small {
+      display: block;
+      color: var(--muted);
+      font-size: 0.76rem;
+      margin-bottom: 4px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 0.95rem;
+      line-height: 1.25;
+    }
+
+    .chart {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      align-items: end;
+      gap: 6px;
+      min-height: 120px;
+      border: 1px dashed #bcd4e8;
+      border-radius: 14px;
+      padding: 8px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(233, 246, 255, 0.9));
+    }
+
+    .bar-col {
+      display: grid;
+      justify-items: center;
+      gap: 5px;
+    }
+
+    .bar {
+      width: 100%;
+      min-height: 6px;
+      border-radius: 999px 999px 6px 6px;
+      background: linear-gradient(180deg, #00b8d1, #0c7fb2);
+      transform-origin: bottom;
+    }
+
+    .bar.negative {
+      background: linear-gradient(180deg, #f86774, #cb2f4f);
+    }
+
+    .bar-col span {
+      font-size: 0.66rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .expense {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px;
+      display: grid;
+      gap: 6px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(245, 251, 255, 0.9));
+    }
+
+    .expense.newly-added {
+      border-color: #0c90af;
+      background: linear-gradient(180deg, #eaf8ff, #ffffff);
+    }
+
+    .expense.linked-expense-target {
+      border-color: #0f7ad2;
+      box-shadow: 0 0 0 3px rgba(15, 122, 210, 0.25), 0 14px 28px rgba(15, 122, 210, 0.22);
+    }
+
+    .expense-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .expense-amount {
+      font-size: 1.03rem;
+      font-weight: 800;
+      color: #1a2030;
+    }
+
+    .expense-income .expense-amount {
+      color: #0f8b4f;
+    }
+
+    .expense-expense .expense-amount {
+      color: #9f2636;
+    }
+
+    .badge {
+      font-size: 0.82rem;
+      border-radius: 0;
+      padding: 0;
+      background: transparent;
+      border: 0;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      white-space: nowrap;
+      display: inline-block;
+      -webkit-text-stroke: 0.9px rgba(20, 20, 20, 0.85);
+      paint-order: stroke fill;
+      text-shadow:
+        1px 0 0 rgba(20, 20, 20, 0.65),
+        -1px 0 0 rgba(20, 20, 20, 0.65),
+        0 1px 0 rgba(20, 20, 20, 0.65),
+        0 -1px 0 rgba(20, 20, 20, 0.65);
+    }
+
+    .badge-category-expense {
+      color: #ff4d6d;
+    }
+
+    .badge-category-income {
+      color: #2ddf74;
+    }
+
+    .expense-note {
+      font-size: 0.87rem;
+      line-height: 1.35;
+      color: #2d3546;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+
+    .photo-pickers {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .photo-btn {
+      min-height: 40px;
+      border-radius: 10px;
+      border: 1px solid #c8d8f1;
+      background: linear-gradient(180deg, #f4faff, #eaf3ff);
+      color: #2f5b93;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .photo-hint {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 0.75rem;
+      line-height: 1.25;
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .photo-item {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #d2e1ef;
+      background: #f3f9ff;
+      aspect-ratio: 1 / 1;
+    }
+
+    .photo-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .photo-remove {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      min-height: 24px;
+      min-width: 24px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      background: rgba(12, 29, 49, 0.75);
+      color: #fff;
+      padding: 0;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .photo-item.pending {
+      opacity: 0.8;
+      border-style: dashed;
+    }
+
+    .expense-photos {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .expense-photo-link {
+      display: block;
+      border-radius: 9px;
+      overflow: hidden;
+      border: 1px solid #d5e1ee;
+      aspect-ratio: 1 / 1;
+      background: #f0f6fd;
+    }
+
+    .expense-photo-link img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .expense-photo-link img.photo-error {
+      opacity: 0.45;
+      filter: grayscale(1);
+    }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 120;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(2, 14, 28, 0.88);
+    }
+
+    .lightbox.open {
+      display: flex;
+    }
+
+    .lightbox img {
+      max-width: min(96vw, 1200px);
+      max-height: 86vh;
+      width: auto;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 22px 44px rgba(0, 0, 0, 0.45);
+      object-fit: contain;
+      background: #0f1e2d;
+    }
+
+    .order-modal-panel {
+      width: min(94vw, 760px);
+      max-height: 86vh;
+      overflow: auto;
+      background: #f7fbff;
+      color: var(--text);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 22px 44px rgba(0, 0, 0, 0.45);
+    }
+
+    .order-modal-panel h3 {
+      margin: 0 0 10px;
+      color: var(--brand);
+    }
+
+    .order-modal-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin: 10px 0;
+      font-size: 0.86rem;
+    }
+
+    .phone-link {
+      color: var(--brand);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .phone-link:hover {
+      text-decoration: underline;
+    }
+
+    .order-modal-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 0.84rem;
+    }
+
+    .order-modal-table th,
+    .order-modal-table td {
+      border-bottom: 1px solid var(--line);
+      padding: 7px 4px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .order-modal-total {
+      margin-top: 12px;
+      text-align: right;
+      font-weight: 800;
+      color: var(--brand);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: calc(10px + env(safe-area-inset-top));
+      right: 12px;
+      min-width: 38px;
+      min-height: 38px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      background: rgba(14, 31, 48, 0.7);
+      color: #fff;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1;
+      padding: 0;
+    }
+
+    .expense-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .expense-meta-left {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      overflow-wrap: anywhere;
+    }
+
+    .expense-owner {
+      font-weight: 700;
+      color: var(--brand-strong);
+      overflow-wrap: anywhere;
+    }
+
+    .expense-created {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #eef5ff;
+      color: #2f5f8f;
+      font-size: 0.72rem;
+      font-weight: 700;
+      border: 1px solid #cfe0f1;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .expense-order {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid #c8dced;
+      background: #f4f8ff;
+      color: #245b8f;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .expense-order-link {
+      text-decoration: none;
+    }
+
+    .expense-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .icon-btn {
+      min-height: 38px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid #ffd3d8;
+      background: linear-gradient(180deg, #fff7f8, #ffedf1);
+      color: var(--danger);
+      font-weight: 700;
+      font-size: 0.76rem;
+    }
+
+    .edit-btn {
+      border-color: #c8d8f1;
+      background: linear-gradient(180deg, #f4faff, #eaf3ff);
+      color: #2f5b93;
+    }
+
+    .btn-secondary {
+      background: linear-gradient(180deg, #f4fbff, #eaf5ff);
+      border: 1px solid #c8dced;
+      color: #1f486d;
+      font-size: 0.8rem;
+      font-weight: 700;
+      min-height: 38px;
+      padding: 8px;
+    }
+
+    .empty {
+      color: var(--muted);
+      text-align: center;
+      border: 1px dashed #c8d8e8;
+      border-radius: 12px;
+      padding: 16px 10px;
+      font-size: 0.86rem;
+      background: rgba(250, 253, 255, 0.9);
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(16px + env(safe-area-inset-bottom));
+      transform: translateX(-50%) translateY(30px);
+      opacity: 0;
+      background: rgba(13, 36, 58, 0.94);
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 0.82rem;
+      pointer-events: none;
+      transition: 0.25s ease;
+      z-index: 99;
+      max-width: calc(100% - 32px);
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 12px 24px rgba(2, 18, 33, 0.45);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast.toast-auth-invalid {
+      background: linear-gradient(120deg, #ff2946 0%, #ff8a00 45%, #ffd400 100%);
+      color: #2f0404;
+      font-size: clamp(1rem, 3.6vw, 1.25rem);
+      font-weight: 900;
+      line-height: 1.28;
+      letter-spacing: 0.45px;
+      padding: 14px 18px;
+      border: 3px solid rgba(255, 255, 255, 0.94);
+      box-shadow: 0 16px 30px rgba(255, 41, 70, 0.5), 0 0 0 2px rgba(255, 255, 255, 0.5) inset;
+      -webkit-text-stroke: 0.4px rgba(255, 255, 255, 0.72);
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.83), 0 2px 0 rgba(255, 223, 181, 0.78), 0 5px 10px rgba(67, 6, 6, 0.34);
+    }
+
+    @media (min-width: 721px) {
+      .app {
+        padding-top: 22px;
+        padding-bottom: 30px;
+      }
+
+      .card {
+        border-radius: 20px;
+      }
+
+      .form-actions {
+        position: static;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        backdrop-filter: none;
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .app {
+        max-width: 1100px;
+        padding: 28px 22px 48px;
+      }
+
+      .card {
+        padding: 18px 20px;
+      }
+
+      .form-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .form-row.full {
+        grid-column: 1 / -1;
+      }
+
+      .desktop-logo {
+        display: block;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .expense-top {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .expense-meta-left {
+        gap: 6px;
+      }
+
+      .expense-order {
+        font-size: 0.68rem;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .expense-meta {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .expense-actions {
+        width: 100%;
+      }
+
+      .expense-actions .icon-btn {
+        flex: 1;
+      }
+
+      .card {
+        padding: 12px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .mobile-quick-nav {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .mobile-nav-btn {
+        min-height: 40px;
+        font-size: 0.74rem;
+        padding: 8px 6px;
+      }
+
+      .expense-amount {
+        font-size: 0.95rem;
+      }
+
+      .photo-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .expense-photos {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+
+    body.has-top-nav .app {
+      padding-top: 62px;
+    }
+
+    @media (min-width: 993px) {
+      body.has-top-nav .app {
+        padding-top: 18px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="views-global.css">
+</head>
+<body class="has-top-nav">
+  <nav class="top-nav" aria-label="Основная навигация">
+    <a href="index.php?section=new_order">Новый</a>
+    <a href="index.php?section=in_progress">В работе</a>
+    <a href="index.php?section=completed">Готово</a>
+    <a href="order_history.php">История</a>
+    <a href="index.php?section=archive">Архив</a>
+    <a href="shinomontazh">Шиномонтаж</a>
+    <a href="index.php?section=warehouse">Склад</a>
+    <a href="storage.php">Хранение</a>
+    <a href="Расходы.html?v=2026050102" class="active">Расходы</a>
+  </nav>
+
+  <button id="wheelMenuToggle" class="nav-toggle" type="button" aria-label="Открыть меню" title="Меню">☰</button>
+
+  <aside id="wheelMenuPanel" class="nav-menu" aria-label="Боковое меню" aria-hidden="true">
+    <a href="index.php?section=new_order">Новый заказ</a>
+    <a href="index.php?section=in_progress">Заказы в работе</a>
+    <a href="index.php?section=completed">Готовые заказы</a>
+    <a href="index.php?section=archive">Архив заказов</a>
+    <a href="shinomontazh">Шиномонтаж</a>
+    <a href="index.php?section=warehouse">Склад</a>
+    <a href="storage.php">Хранение</a>
+    <a href="Расходы.html?v=2026050102" class="active">Расходы</a>
+    <a href="order_history.php">История</a>
+    <a href="index.php?section=settings">Настройки</a>
+    <button id="wheelMenuLogoutBtn" type="button">Выйти из расходов</button>
+  </aside>
+
+  <div class="auth-gate" id="authGate">
+    <div class="auth-card">
+      <div class="auth-page-label">РАСХОДЫ</div>
+      <h2 class="auth-title" id="authTitle">Вход в РАСХОДЫ</h2>
+      <p class="auth-subtitle" id="authSubtitle">Авторизация тем же логином и паролем, что и в заказах.</p>
+      <form id="authForm" class="form-grid">
+        <div class="form-row full">
+          <label for="authUsername">Логин</label>
+          <input id="authUsername" type="text" minlength="3" maxlength="32" autocomplete="username" required>
+        </div>
+        <div class="form-row full">
+          <label for="authPassword">Пароль</label>
+          <input id="authPassword" type="password" minlength="6" maxlength="72" autocomplete="current-password" required>
+        </div>
+        <div class="form-row full">
+          <button id="authInlineRemindBtn" class="auth-inline-link" type="button">Забыли пароль?</button>
+        </div>
+        <div class="form-row full">
+          <button id="authSubmitBtn" class="btn-primary" type="submit">Войти</button>
+        </div>
+      </form>
+      <div class="auth-reminder">
+        <p class="auth-reminder-text">Если пароль от этой страницы забыт, введите логин и система покажет новый временный пароль.</p>
+        <button id="authRemindBtn" class="btn-secondary" type="button">Напомнить пароль</button>
+      </div>
+      <div id="authResetForm" class="auth-reset-form" hidden>
+        <div class="form-row full">
+          <label for="authNewPassword">Свой новый пароль</label>
+          <input id="authNewPassword" type="password" minlength="6" maxlength="72" autocomplete="new-password" placeholder="Минимум 6 символов">
+        </div>
+        <div class="form-row full">
+          <button id="authSaveNewPasswordBtn" class="btn-primary" type="button">Сохранить новый пароль</button>
+        </div>
+      </div>
+      <button id="authSwitchBtn" class="auth-switch" type="button">Нет аккаунта? Зарегистрироваться</button>
+      <div id="authError" class="auth-error"></div>
+      <div id="authSuccess" class="auth-success"></div>
+    </div>
+  </div>
+
+  <main class="app">
+    <section class="card expense-card">
+      <h2>Новая запись</h2>
+      <div id="readOnlyBanner" class="readonly-banner" hidden>Суперпользователь: выберите пользователя и добавьте запись. Для правок откройте запись и нажмите «Редактировать».</div>
+      <form id="expenseForm" class="form-grid">
+        <div class="form-row">
+          <label for="entryType">Категория</label>
+          <select id="entryType" name="entryType">
+            <option value="expense" selected>Расходы</option>
+            <option value="income">Доходы</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="amount">Сумма (₽)</label>
+          <input id="amount" name="amount" type="text" inputmode="decimal" autocomplete="off" placeholder="Например: 1 000 000" required>
+        </div>
+        <div class="form-row">
+          <label for="expenseDate">Дата</label>
+          <input id="expenseDate" name="expenseDate" type="date" required>
+        </div>
+        <div class="form-row" id="superUserRow" hidden>
+          <label for="superUserSelect">Пользователь</label>
+          <select id="superUserSelect" name="superUserSelect"></select>
+          <span class="field-hint">Запись будет сохранена от имени выбранного пользователя.</span>
+        </div>
+        <div class="form-row">
+          <label for="orderSelect">Заказ / заказ-наряд</label>
+          <select id="orderSelect" name="orderSelect">
+            <option value="">Не привязывать</option>
+          </select>
+          <span class="field-hint">Можно привязать обычный заказ или операцию из раздела «Шиномонтаж».</span>
+        </div>
+        <div class="form-row">
+          <label for="orderManual">Номер вручную</label>
+          <input id="orderManual" name="orderManual" type="text" autocomplete="off" placeholder="Например: 123 или zakaz-123">
+        </div>
+        <div class="form-row full note-row">
+          <label for="note">Комментарий (необязательно)</label>
+          <textarea id="note" name="note" autocomplete="off" placeholder="Пример: кофе и сэндвич"></textarea>
+          <div id="noteSuggestions" class="suggestions" hidden></div>
+        </div>
+        <div class="form-row full">
+          <label>Фото (до 6)</label>
+          <div class="photo-pickers">
+            <button id="cameraBtn" class="photo-btn" type="button">С камеры</button>
+            <button id="galleryBtn" class="photo-btn" type="button">Из галереи</button>
+          </div>
+          <input id="cameraInput" type="file" accept="image/*" capture="environment" multiple hidden>
+          <input id="galleryInput" type="file" accept="image/*" multiple hidden>
+          <p class="photo-hint">Фото можно добавить при создании и изменить позже в режиме редактирования.</p>
+          <div id="formPhotoGrid" class="photo-grid"></div>
+        </div>
+        <div class="form-row full">
+          <div class="form-actions">
+            <button id="expenseSubmitBtn" class="btn-primary" type="submit">Добавить запись</button>
+            <button id="cancelEditBtn" class="btn-secondary" type="button" hidden>Отмена</button>
+          </div>
+        </div>
+        <div class="form-row full search-row">
+          <label for="expenseSearch">Поиск по записям</label>
+          <div class="search-controls">
+            <input id="expenseSearch" type="search" autocomplete="off" placeholder="Введите ключевое слово">
+            <button id="clearExpenseSearchBtn" class="search-clear-btn" type="button">Очистить</button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <details class="card spoiler" id="filtersDetails">
+      <summary>Фильтры и статистика</summary>
+      <div class="form-grid" style="margin-bottom: 12px;">
+        <div class="form-row">
+          <label for="periodSelect">Период</label>
+          <select id="periodSelect">
+            <option value="today">Сегодня</option>
+            <option value="week">Последние 7 дней</option>
+            <option value="month">Текущий месяц</option>
+            <option value="all" selected>За всё время</option>
+            <option value="custom">Произвольный диапазон</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="categoryFilter">Категория</label>
+          <select id="categoryFilter">
+            <option value="">Все категории</option>
+            <option value="expense">Расходы</option>
+            <option value="income">Доходы</option>
+          </select>
+        </div>
+        <div class="form-row" id="userFilterRow" hidden>
+          <label for="userFilter">Пользователь</label>
+          <select id="userFilter"></select>
+        </div>
+        <div class="form-row full" id="customPeriodRow" hidden>
+          <label>Диапазон дат</label>
+          <div class="form-grid">
+            <div class="form-row">
+              <input id="periodFrom" type="date" aria-label="Начало периода">
+            </div>
+            <div class="form-row">
+              <input id="periodTo" type="date" aria-label="Конец периода">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="filters-actions">
+        <button id="resetFiltersBtn" class="filters-reset-btn" type="button">Сбросить фильтры</button>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <small>Баланс по фильтру</small>
+          <strong id="sumFiltered">0 ₽</strong>
+        </div>
+        <div class="stat">
+          <small>Количество записей</small>
+          <strong id="countFiltered">0</strong>
+        </div>
+        <div class="stat is-clickable" id="incomeStat" tabindex="0" role="button" aria-label="Показать только доходы">
+          <small>Доходы</small>
+          <strong id="incomeFiltered">0 ₽</strong>
+        </div>
+        <div class="stat is-clickable" id="expenseStat" tabindex="0" role="button" aria-label="Показать только расходы">
+          <small>Расходы</small>
+          <strong id="expenseFiltered">0 ₽</strong>
+        </div>
+      </div>
+
+      <div class="chart" id="weeklyChart"></div>
+    </details>
+
+    <details class="card spoiler" id="historyDetails" open>
+      <summary>История операций</summary>
+      <div id="expenseList" class="list"></div>
+    </details>
+
+    <div class="session-bar bottom-session" id="sessionBar" hidden>
+      <span id="sessionUser"></span>
+    </div>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Нижняя навигация">
+    <a href="index.php?section=new_order" class="nav-item">
+      <i class="fas fa-plus-circle nav-icon"></i>
+      <span>Новый</span>
+    </a>
+    <a href="index.php?section=in_progress" class="nav-item">
+      <i class="fas fa-tasks nav-icon"></i>
+      <span>В работе</span>
+    </a>
+    <a href="index.php?section=completed" class="nav-item">
+      <i class="fas fa-check-circle nav-icon"></i>
+      <span>Готово</span>
+    </a>
+    <a href="order_history.php" class="nav-item">
+      <i class="fas fa-history nav-icon"></i>
+      <span>История</span>
+    </a>
+    <a href="index.php?section=archive" class="nav-item">
+      <i class="fas fa-archive nav-icon"></i>
+      <span>Архив</span>
+    </a>
+    <a href="shinomontazh" class="nav-item">
+      <i class="fas fa-file-invoice nav-icon"></i>
+      <span>Шины</span>
+    </a>
+    <a href="index.php?section=warehouse" class="nav-item">
+      <i class="fas fa-warehouse nav-icon"></i>
+      <span>Склад</span>
+    </a>
+    <a href="storage.php" class="nav-item">
+      <i class="fas fa-box nav-icon"></i>
+      <span>Хранение</span>
+    </a>
+    <a href="Расходы.html?v=2026050102" class="nav-item active">
+      <i class="fas fa-coins nav-icon"></i>
+      <span>Расходы</span>
+    </a>
+  </nav>
+
+  <div class="toast" id="toast"></div>
+  <button id="installBtn" class="install-btn" type="button" hidden>Установить</button>
+  <div class="desktop-logo" aria-hidden="true">
+    <img src="Logo.png" alt="">
+  </div>
+  <div class="lightbox" id="photoLightbox" aria-hidden="true">
+    <button type="button" class="lightbox-close" id="photoLightboxClose" aria-label="Закрыть">×</button>
+    <img id="photoLightboxImg" src="" alt="Фото в полном размере">
+  </div>
+  <div class="lightbox" id="orderModal" aria-hidden="true" inert>
+    <button type="button" class="lightbox-close" id="orderModalClose" aria-label="Закрыть">×</button>
+    <div class="order-modal-panel" id="orderModalBody"></div>
+  </div>
+
+  <script>
+    (() => {
+      const STORAGE_KEY = "mobile_expenses_v1";
+      const API_URL = "rashody_api.php";
+      const INSTALL_PROMPT_KEY = "rashody_install_prompted_v1";
+      const PHOTO_COMPRESS = {
+        maxSide: 720,
+        jpegQuality: 0.45,
+        minSize: 250 * 1024
+      };
+      const PHOTO_COMPRESS_SKIP_TYPES = new Set(["image/gif", "image/svg+xml"]);
+      let deferredInstallPrompt = null;
+      const ADD_EXPENSE_MESSAGES = [
+        "Саня, серьёзно? Опять тратишь? Олеся уже считает, сколько раз ты это делаешь сегодня.",
+        "Александр, бюджет уже на коленях умоляет остановиться.",
+        "Александр, Нюся только что спросила: «Папа опять деньги на ветер?»",
+        "Саня, Олеся сказала: «Ещё одна трата — и я тебе карту в микроволновку».",
+        "Нюся, папочка снова потратил. Теперь без новой Барби до лета.",
+        "Саня, это 8-я покупка за утро. Олеся в соседней комнате стонет.",
+        "Олеся просила передать: «Санечка, ты меня доведёшь до банка».",
+        "Саня, Олеся уже считает, сколько мы могли бы купить продуктов вместо твоего кофе.",
+        "Александр, семья в трауре по твоему последнему чеку.",
+        "Папа, Нюся хочет знать, почему мы опять на гречке?",
+        "Саня, ты тратишь быстрее, чем Олеся успевает закатывать глаза.",
+        "Олеся в чате с подругами: «Мой муж опять всё просадил 😂»",
+        "Нюся, папочка купил ненужное. Идём плакать в подушку.",
+        "Александр, кошелёк официально подаёт на развод.",
+        "Саня, Олеся готовит тебе «разговор по душам» вечером.",
+        "Семья голосует против папиных трат 3:0. Ты проиграл.",
+        "Нюся сказала: «Папа, верни деньги, я хочу в зоопарк!»",
+        "Олеся шепчет: «Саня, ты невыносимый мот».",
+        "Александр, это уже не расходы, это катастрофа.",
+        "Саня, Нюся смотрит на тебя как на злодея из мультика.",
+        "Папочка, мы теперь экономим даже на свете. Твоя вина.",
+        "Нюся плачет: «Папа опять всё потратил на ерунду…»",
+        "Саня, бюджет в реанимации, врачи не дают гарантий.",
+        "Александр, Олеся уже ищет тебе подработку на выходные.",
+        "Семья объявляет финансовый карантин для папы.",
+        "Нюся просит: «Папа, хватит, я хочу новые кроссовки!»",
+        "Олеся в ярости: «Саня, ты меня разоришь!»",
+        "Саня, даже Нюся уже понимает, что ты переборщил.",
+        "Александр, ты купил это? Серьёзно? Опять?!",
+        "Папа, Нюся теперь без сладкого. Гордишься собой?",
+        "Саня, Олеся считает твои траты в Excel. Готовься.",
+        "Нюся: «Папа плохой, тратит всё на глупости!»",
+        "Олеся просила напомнить: «Мы не Рокфеллеры, Санечка».",
+        "Саня, это уже 9-я трата. Семья в шоке.",
+        "Александр, кошелёк стонет громче, чем Нюся по утрам.",
+        "Олеся сказала: «Саня, ты хуже, чем ребёнок в магазине».",
+        "Саня, бюджет официально тебя ненавидит.",
+        "Александр, Олеся уже готовит ультиматум.",
+        "Саня, ты тратишь как будто завтра апокалипсис.",
+        "Семья просит пощады от папиных покупок.",
+        "Нюся: «Папа, мы бедные теперь из-за тебя?»",
+        "Александр, это не траты, это саботаж семьи.",
+        "Олеся сказала: «Санечка, ты меня убиваешь финансово».",
+        "Саня, даже кот смотрит на тебя осуждающе.",
+        "Александр, бюджет трещит по швам.",
+        "Папа, мы объявляем тебе бойкот покупок.",
+        "Саня, кошелёк в реанимации.",
+        "Александр, семья голосует против тебя.",
+        "Олеся просила: «Передай Санечке — хватит!»",
+        "Саня, Нюся просит пощады от папы-транжиры.",
+        "Александр, бюджет плачет.",
+        "Саня, Олеся и Нюся вместе: «Ты опять всё просрал, любимый! Мы тебя любим… но кошелёк — нет»."
+      ];
+      const ENTRY_CATEGORIES = Object.freeze({
+        expense: "Расходы",
+        income: "Доходы"
+      });
+      const ENTRY_CATEGORY_KEYS = Object.keys(ENTRY_CATEGORIES);
+      const ENTRY_CATEGORY_ALIAS_MAP = Object.freeze({
+        expense: "expense",
+        расход: "expense",
+        расходы: "expense",
+        income: "income",
+        доход: "income",
+        доходы: "income"
+      });
+      const state = {
+        expenses: [],
+        rev: 0,
+        orderOptions: [],
+        period: "all",
+        periodFrom: "",
+        periodTo: "",
+        typeFilter: "",
+        categoryFilter: "",
+        searchQuery: "",
+        lastAddedExpenseId: "",
+        editingExpenseId: "",
+        formPhotos: [],
+        pendingPhotoFiles: [],
+        pendingPhotoPreviewUrls: [],
+        isSuper: false,
+        readOnly: false,
+        userFilter: "",
+        superUsers: [],
+        superUserId: "",
+        superRefreshTimer: null,
+        orderRefreshTimer: null,
+        authMode: "login",
+        currentUsername: "",
+        linkedExpenseId: "",
+        linkedExpenseFocused: false
+      };
+
+      const ui = {
+        authGate: document.getElementById("authGate"),
+        authForm: document.getElementById("authForm"),
+        authTitle: document.getElementById("authTitle"),
+        authSubtitle: document.getElementById("authSubtitle"),
+        authUsername: document.getElementById("authUsername"),
+        authPassword: document.getElementById("authPassword"),
+        authSubmitBtn: document.getElementById("authSubmitBtn"),
+        authSwitchBtn: document.getElementById("authSwitchBtn"),
+        authInlineRemindBtn: document.getElementById("authInlineRemindBtn"),
+        authError: document.getElementById("authError"),
+        authSuccess: document.getElementById("authSuccess"),
+        authRemindBtn: document.getElementById("authRemindBtn"),
+        authResetForm: document.getElementById("authResetForm"),
+        authNewPassword: document.getElementById("authNewPassword"),
+        authSaveNewPasswordBtn: document.getElementById("authSaveNewPasswordBtn"),
+        sessionBar: document.getElementById("sessionBar"),
+        sessionUser: document.getElementById("sessionUser"),
+        logoutBtn: document.getElementById("logoutBtn"),
+        wheelMenuToggle: document.getElementById("wheelMenuToggle"),
+        wheelMenuPanel: document.getElementById("wheelMenuPanel"),
+        wheelMenuLogoutBtn: document.getElementById("wheelMenuLogoutBtn"),
+        goHomeBtn: document.getElementById("goHomeBtn"),
+        expenseForm: document.getElementById("expenseForm"),
+        readOnlyBanner: document.getElementById("readOnlyBanner"),
+        entryType: document.getElementById("entryType"),
+        amount: document.getElementById("amount"),
+        expenseDate: document.getElementById("expenseDate"),
+        superUserRow: document.getElementById("superUserRow"),
+        superUserSelect: document.getElementById("superUserSelect"),
+        orderSelect: document.getElementById("orderSelect"),
+        orderManual: document.getElementById("orderManual"),
+        note: document.getElementById("note"),
+        noteSuggestions: document.getElementById("noteSuggestions"),
+        cameraBtn: document.getElementById("cameraBtn"),
+        galleryBtn: document.getElementById("galleryBtn"),
+        cameraInput: document.getElementById("cameraInput"),
+        galleryInput: document.getElementById("galleryInput"),
+        formPhotoGrid: document.getElementById("formPhotoGrid"),
+        expenseSubmitBtn: document.getElementById("expenseSubmitBtn"),
+        cancelEditBtn: document.getElementById("cancelEditBtn"),
+        periodSelect: document.getElementById("periodSelect"),
+        categoryFilter: document.getElementById("categoryFilter"),
+        userFilterRow: document.getElementById("userFilterRow"),
+        userFilter: document.getElementById("userFilter"),
+        customPeriodRow: document.getElementById("customPeriodRow"),
+        periodFrom: document.getElementById("periodFrom"),
+        periodTo: document.getElementById("periodTo"),
+        resetFiltersBtn: document.getElementById("resetFiltersBtn"),
+        expenseSearch: document.getElementById("expenseSearch"),
+        clearExpenseSearchBtn: document.getElementById("clearExpenseSearchBtn"),
+        filtersDetails: document.getElementById("filtersDetails"),
+        sumFiltered: document.getElementById("sumFiltered"),
+        countFiltered: document.getElementById("countFiltered"),
+        incomeFiltered: document.getElementById("incomeFiltered"),
+        expenseFiltered: document.getElementById("expenseFiltered"),
+        incomeStat: document.getElementById("incomeStat"),
+        expenseStat: document.getElementById("expenseStat"),
+        weeklyChart: document.getElementById("weeklyChart"),
+        historyDetails: document.getElementById("historyDetails"),
+        expenseList: document.getElementById("expenseList"),
+        toast: document.getElementById("toast"),
+        installBtn: document.getElementById("installBtn"),
+        superRefreshBtn: document.getElementById("superRefreshBtn"),
+        photoLightbox: document.getElementById("photoLightbox"),
+        photoLightboxImg: document.getElementById("photoLightboxImg"),
+        photoLightboxClose: document.getElementById("photoLightboxClose"),
+        orderModal: document.getElementById("orderModal"),
+        orderModalBody: document.getElementById("orderModalBody"),
+        orderModalClose: document.getElementById("orderModalClose"),
+        mobileToForm: document.getElementById("mobileToForm"),
+        mobileToFilters: document.getElementById("mobileToFilters"),
+        mobileToHistory: document.getElementById("mobileToHistory")
+      };
+
+      ui.expenseDate.value = todayIso();
+      ui.periodSelect.value = state.period;
+      bindEvents();
+      initPwa();
+      boot();
+
+      async function boot() {
+        applyLinkedExpenseContext();
+        setAuthMode("login");
+        const session = await fetchAuthSession();
+        if (!session.loggedIn) {
+          state.isSuper = false;
+          applyReadOnlyMode();
+          showAuthGate();
+          render();
+          return;
+        }
+        applyAuthState(session.username, session.isSuper);
+        await loadDataAfterAuth();
+      }
+
+      function bindEvents() {
+        ui.expenseForm.addEventListener("submit", onAddExpense);
+        ui.authForm?.addEventListener("submit", onAuthSubmit);
+        ui.authSwitchBtn?.addEventListener("click", onAuthSwitch);
+        ui.authInlineRemindBtn?.addEventListener("click", onAuthRemind);
+        ui.authRemindBtn?.addEventListener("click", onAuthRemind);
+        ui.authSaveNewPasswordBtn?.addEventListener("click", onSaveNewPassword);
+        ui.logoutBtn?.addEventListener("click", onLogout);
+        ui.wheelMenuToggle?.addEventListener("click", () => {
+          if (!ui.wheelMenuPanel) return;
+          const isOpen = ui.wheelMenuPanel.classList.toggle("open");
+          ui.wheelMenuPanel.setAttribute("aria-hidden", isOpen ? "false" : "true");
+        });
+        ui.wheelMenuLogoutBtn?.addEventListener("click", () => {
+          closeWheelMenu();
+          onLogout();
+        });
+        ui.goHomeBtn?.addEventListener("click", () => {
+          window.location.href = "index.php";
+        });
+        ui.installBtn?.addEventListener("click", onInstallClick);
+        ui.superRefreshBtn?.addEventListener("click", onSuperRefreshClick);
+        ui.cancelEditBtn.addEventListener("click", () => stopEditing(true));
+        ui.amount?.addEventListener("input", onAmountInput);
+        ui.amount?.addEventListener("blur", onAmountInput);
+        ui.note?.addEventListener("input", renderNoteSuggestions);
+        ui.note?.addEventListener("focus", renderNoteSuggestions);
+        ui.note?.addEventListener("input", autoGrowNote);
+        ui.note?.addEventListener("focus", autoGrowNote);
+        ui.superUserSelect?.addEventListener("change", () => {
+          state.superUserId = String(ui.superUserSelect.value || "");
+        });
+        ui.orderSelect?.addEventListener("change", syncOrderSelectToManual);
+        ui.orderManual?.addEventListener("input", syncOrderManualToSelect);
+        ui.cameraBtn?.addEventListener("click", () => ui.cameraInput?.click());
+        ui.galleryBtn?.addEventListener("click", () => ui.galleryInput?.click());
+        ui.cameraInput?.addEventListener("change", onPhotoInputChange);
+        ui.galleryInput?.addEventListener("change", onPhotoInputChange);
+        ui.formPhotoGrid?.addEventListener("click", onFormPhotoGridClick);
+        ui.noteSuggestions?.addEventListener("mousedown", onNoteSuggestionMouseDown);
+        ui.periodSelect.addEventListener("change", () => {
+          state.period = ui.periodSelect.value;
+          toggleCustomPeriodInputs();
+          render();
+        });
+        ui.categoryFilter?.addEventListener("change", () => {
+          state.categoryFilter = String(ui.categoryFilter.value || "");
+          render();
+        });
+        ui.userFilter?.addEventListener("change", () => {
+          state.userFilter = ui.userFilter.value || "";
+          render();
+        });
+        ui.periodFrom.addEventListener("change", () => {
+          state.periodFrom = ui.periodFrom.value;
+          render();
+        });
+        ui.periodTo.addEventListener("change", () => {
+          state.periodTo = ui.periodTo.value;
+          render();
+        });
+        ui.incomeStat?.addEventListener("click", () => toggleTypeFilter("income"));
+        ui.expenseStat?.addEventListener("click", () => toggleTypeFilter("expense"));
+        ui.incomeStat?.addEventListener("keydown", onTypeStatKeydown);
+        ui.expenseStat?.addEventListener("keydown", onTypeStatKeydown);
+        ui.resetFiltersBtn?.addEventListener("click", resetFilters);
+        ui.expenseSearch?.addEventListener("input", () => {
+          state.searchQuery = ui.expenseSearch.value;
+          render();
+        });
+        ui.clearExpenseSearchBtn?.addEventListener("click", clearExpenseSearch);
+        ui.expenseList.addEventListener("click", onListClick);
+        ui.mobileToForm?.addEventListener("click", () => {
+          scrollToElement(ui.expenseForm);
+          setTimeout(() => ui.amount.focus(), 180);
+        });
+        ui.mobileToFilters?.addEventListener("click", () => {
+          if (ui.filtersDetails) {
+            ui.filtersDetails.open = true;
+            scrollToElement(ui.filtersDetails);
+          }
+        });
+        ui.mobileToHistory?.addEventListener("click", () => {
+          if (ui.historyDetails) {
+            ui.historyDetails.open = true;
+            scrollToElement(ui.historyDetails);
+          }
+        });
+        ui.photoLightboxClose?.addEventListener("click", closeLightbox);
+        ui.photoLightbox?.addEventListener("click", (event) => {
+          if (event.target === ui.photoLightbox) {
+            closeLightbox();
+          }
+        });
+        ui.orderModalClose?.addEventListener("click", closeOrderModal);
+        ui.orderModal?.addEventListener("click", (event) => {
+          if (event.target === ui.orderModal) {
+            closeOrderModal();
+          }
+        });
+        document.addEventListener("click", onDocumentClick);
+        document.addEventListener("keydown", onDocumentKeydown);
+        document.addEventListener("visibilitychange", () => {
+          if (document.visibilityState === "visible") {
+            void refreshSuperData();
+          }
+        });
+        window.addEventListener("beforeunload", clearPendingPreviewUrls);
+        autoGrowNote();
+        toggleCustomPeriodInputs();
+        renderFormPhotoGrid();
+        renderNoteSuggestions();
+      }
+
+      function closeWheelMenu() {
+        if (ui.wheelMenuPanel) {
+          ui.wheelMenuPanel.classList.remove("open");
+          ui.wheelMenuPanel.setAttribute("aria-hidden", "true");
+        }
+      }
+
+      function autoGrowTextarea(textarea) {
+        if (!textarea) {
+          return;
+        }
+        textarea.style.height = "auto";
+        textarea.style.overflow = "hidden";
+        textarea.style.height = `${textarea.scrollHeight}px`;
+      }
+
+      function autoGrowNote() {
+        autoGrowTextarea(ui.note);
+      }
+
+      function bindExpensePhotoHandlers() {
+        const images = document.querySelectorAll(".expense-photo-link img");
+        images.forEach((img) => {
+          if (img.dataset.bound === "1") {
+            return;
+          }
+          img.dataset.bound = "1";
+          img.addEventListener("error", () => retryExpensePhoto(img));
+        });
+      }
+
+      function retryExpensePhoto(img) {
+        if (!img) {
+          return;
+        }
+        const retries = Number(img.dataset.retry || 0);
+        if (retries >= 1) {
+          img.classList.add("photo-error");
+          return;
+        }
+        img.dataset.retry = String(retries + 1);
+        const baseSrc = img.dataset.src || img.currentSrc || img.getAttribute("src") || "";
+        if (!baseSrc) {
+          return;
+        }
+        try {
+          const url = new URL(baseSrc, window.location.origin);
+          url.searchParams.set("retry", String(Date.now()));
+          img.src = url.toString();
+        } catch (error) {
+          const sep = baseSrc.includes("?") ? "&" : "?";
+          img.src = `${baseSrc}${sep}retry=${Date.now()}`;
+        }
+      }
+
+      function initPwa() {
+        registerExpensesServiceWorker();
+
+        if (window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone) {
+          return;
+        }
+
+        window.addEventListener("beforeinstallprompt", (event) => {
+          event.preventDefault();
+          deferredInstallPrompt = event;
+          ui.installBtn.hidden = false;
+
+          const alreadyPrompted = localStorage.getItem(INSTALL_PROMPT_KEY) === "1";
+          if (!alreadyPrompted) {
+            localStorage.setItem(INSTALL_PROMPT_KEY, "1");
+            setTimeout(() => {
+              void onInstallClick();
+            }, 900);
+          }
+        });
+
+        window.addEventListener("appinstalled", () => {
+          deferredInstallPrompt = null;
+          ui.installBtn.hidden = true;
+        });
+      }
+
+      async function onInstallClick() {
+        if (!deferredInstallPrompt) {
+          return;
+        }
+        const promptEvent = deferredInstallPrompt;
+        deferredInstallPrompt = null;
+        ui.installBtn.hidden = true;
+        promptEvent.prompt();
+        try {
+          await promptEvent.userChoice;
+        } catch (error) {
+          // ignore
+        }
+      }
+
+      function registerExpensesServiceWorker() {
+        if (!("serviceWorker" in navigator)) {
+          return;
+        }
+        navigator.serviceWorker.register("./expenses-sw.js").catch(() => {
+          // ignore
+        });
+      }
+
+      async function onSuperRefreshClick() {
+        if (!state.isSuper) {
+          return;
+        }
+        await refreshSuperData();
+        showToast("Данные обновлены");
+      }
+
+      async function loadDataAfterAuth() {
+        const loaded = await loadFromServer();
+        if (!loaded) {
+          if (state.isSuper) {
+            state.expenses = [];
+            render();
+            showToast("Нет связи с сервером");
+            return;
+          }
+          loadFromStorage();
+        } else if (!state.isSuper) {
+          persistLocalOnly();
+        }
+        await loadOrderOptions();
+        await loadSuperUsers();
+        render();
+      }
+
+      function getLinkedExpenseIdFromUrl() {
+        try {
+          const params = new URLSearchParams(window.location.search);
+          const raw = String(params.get("expense_id") || "").trim();
+          if (!raw) {
+            return "";
+          }
+          return raw.slice(0, 80);
+        } catch (error) {
+          return "";
+        }
+      }
+
+      function applyLinkedExpenseContext() {
+        const linkedId = getLinkedExpenseIdFromUrl();
+        if (!linkedId) {
+          return;
+        }
+        state.linkedExpenseId = linkedId;
+        state.linkedExpenseFocused = false;
+        state.period = "all";
+        state.periodFrom = "";
+        state.periodTo = "";
+        state.typeFilter = "";
+        state.categoryFilter = "";
+        state.searchQuery = "";
+        if (ui.periodSelect) {
+          ui.periodSelect.value = "all";
+        }
+        if (ui.periodFrom) {
+          ui.periodFrom.value = "";
+        }
+        if (ui.periodTo) {
+          ui.periodTo.value = "";
+        }
+        if (ui.categoryFilter) {
+          ui.categoryFilter.value = "";
+        }
+        if (ui.expenseSearch) {
+          ui.expenseSearch.value = "";
+        }
+        if (ui.historyDetails) {
+          ui.historyDetails.open = true;
+        }
+      }
+
+      function normalizeOrderIdInput(value) {
+        const raw = String(value || "").trim().toLowerCase();
+        const zakazMatch = raw.match(/^zakaz[-_]?(\d{1,14})$/);
+        if (zakazMatch) {
+          return `zakaz-${zakazMatch[1]}`;
+        }
+        return raw.replace(/\D+/g, "").slice(0, 20);
+      }
+
+      function syncOrderSelectToManual() {
+        if (!ui.orderSelect || !ui.orderManual) return;
+        const selected = normalizeOrderIdInput(ui.orderSelect.value);
+        if (selected) {
+          ui.orderManual.value = selected;
+        }
+      }
+
+      function syncOrderManualToSelect() {
+        if (!ui.orderManual) return;
+        const normalized = normalizeOrderIdInput(ui.orderManual.value);
+        if (normalized !== ui.orderManual.value) {
+          ui.orderManual.value = normalized;
+        }
+        if (!ui.orderSelect) return;
+        if (!normalized) {
+          ui.orderSelect.value = "";
+          return;
+        }
+        const hasOption = Array.from(ui.orderSelect.options).some((opt) => opt.value === normalized);
+        ui.orderSelect.value = hasOption ? normalized : "";
+      }
+
+      function getOrderIdFromForm() {
+        const manual = normalizeOrderIdInput(ui.orderManual?.value || "");
+        const selected = normalizeOrderIdInput(ui.orderSelect?.value || "");
+        return manual || selected || "";
+      }
+
+      function formatOrderOption(order) {
+        const id = normalizeOrderIdInput(order?.id || "");
+        if (!id) return "";
+        const name = String(order?.client_name || "").trim();
+        if (order?.source === "zakaz" || order?.status === "zakaz") {
+          const doc = String(order?.document_number || "").trim();
+          return `Заказ-наряд ${doc ? "№" + doc : "#" + id.replace(/^zakaz-/, "")}${name ? " — " + name : ""}`;
+        }
+        const status = order?.status === "completed" ? "Готово" : "В работе";
+        return `#${id}${name ? " — " + name : ""} (${status})`;
+      }
+
+      function getOrderInfoById(orderId) {
+        const normalized = normalizeOrderIdInput(orderId || "");
+        if (!normalized) return null;
+        const fromOptions = state.orderOptions.find((item) => normalizeOrderIdInput(item?.id || "") === normalized);
+        if (!fromOptions) return null;
+        return {
+          id: normalized,
+          source: String(fromOptions.source || ""),
+          documentNumber: String(fromOptions.document_number || ""),
+          clientName: String(fromOptions.client_name || "").trim(),
+          notes: String(fromOptions.notes || "").trim(),
+          status: String(fromOptions.status || ""),
+          order: fromOptions
+        };
+      }
+
+      function getOrderSection(orderId) {
+        const info = getOrderInfoById(orderId);
+        if (info?.status === "completed") {
+          return "completed";
+        }
+        return "in_progress";
+      }
+
+      function buildOrderHref(orderId) {
+        const normalized = normalizeOrderIdInput(orderId || "");
+        if (!normalized) return "";
+        if (normalized.startsWith("zakaz-")) {
+          return `shinomontazh.html?operation_id=${encodeURIComponent(normalized.replace(/^zakaz-/, ""))}`;
+        }
+        const section = getOrderSection(normalized);
+        return `index.php?section=${encodeURIComponent(section)}&open_details=${encodeURIComponent(normalized)}`;
+      }
+
+      function renderOrderOptions(preferred = "") {
+        if (!ui.orderSelect) return;
+        const current = normalizeOrderIdInput(preferred || ui.orderManual?.value || ui.orderSelect.value || "");
+        ui.orderSelect.innerHTML = "";
+        const base = document.createElement("option");
+        base.value = "";
+        base.textContent = "Не привязывать";
+        ui.orderSelect.appendChild(base);
+        for (const order of state.orderOptions) {
+          const id = normalizeOrderIdInput(order?.id || "");
+          if (!id) continue;
+          const label = formatOrderOption(order);
+          const opt = document.createElement("option");
+          opt.value = id;
+          opt.textContent = label || `#${id}`;
+          ui.orderSelect.appendChild(opt);
+        }
+        if (current && Array.from(ui.orderSelect.options).some((opt) => opt.value === current)) {
+          ui.orderSelect.value = current;
+        } else {
+          ui.orderSelect.value = "";
+        }
+      }
+
+      async function loadOrderOptions() {
+        if (!ui.orderSelect) return;
+        try {
+          const response = await fetch(`${API_URL}?action=orders`, {
+            method: "GET",
+            credentials: "same-origin",
+            cache: "no-store",
+            headers: { "Accept": "application/json" }
+          });
+          if (!response.ok) return;
+          const payload = await response.json().catch(() => ({}));
+          if (payload?.ok !== true || !Array.isArray(payload.orders)) return;
+          state.orderOptions = payload.orders;
+          const map = new Map();
+          for (const order of state.orderOptions) {
+            const id = normalizeOrderIdInput(order?.id || "");
+            if (!id) continue;
+            map.set(id, {
+              clientName: String(order?.client_name || "").trim(),
+              notes: String(order?.notes || "").trim(),
+              order
+            });
+          }
+          if (Array.isArray(state.expenses) && state.expenses.length > 0) {
+            state.expenses = state.expenses.map((item) => {
+              const id = normalizeOrderIdInput(item.orderId || "");
+              if (!id || !map.has(id)) {
+                return item;
+              }
+              const info = map.get(id);
+              return {
+                ...item,
+                orderClientName: info.clientName || "",
+                orderNotes: info.notes || ""
+              };
+            });
+          }
+          renderOrderOptions();
+        } catch (error) {
+          // ignore
+        }
+      }
+
+      function setAuthMode(mode) {
+        state.authMode = mode === "register" ? "register" : "login";
+        if (!ui.authTitle) return;
+        const isRegister = state.authMode === "register";
+        ui.authTitle.textContent = isRegister ? "Регистрация в РАСХОДЫ" : "Вход в РАСХОДЫ";
+        ui.authSubtitle.textContent = isRegister
+          ? "Создайте общий аккаунт для заказов и расходов."
+          : "Войдите тем же логином и паролем, что и в заказах.";
+        ui.authSubmitBtn.textContent = isRegister ? "Зарегистрироваться" : "Войти";
+        ui.authPassword.autocomplete = isRegister ? "new-password" : "current-password";
+        ui.authSwitchBtn.textContent = isRegister
+          ? "Уже есть аккаунт? Войти"
+          : "Нет аккаунта? Зарегистрироваться";
+        setAuthErrorMessage("");
+        if (ui.authSuccess) {
+          ui.authSuccess.textContent = "";
+        }
+        if (ui.authResetForm) {
+          ui.authResetForm.hidden = true;
+        }
+        if (ui.authNewPassword) {
+          ui.authNewPassword.value = "";
+        }
+      }
+
+      function showAuthGate(message = "") {
+        if (ui.authGate) {
+          ui.authGate.classList.add("show");
+        }
+        stopOrderRefresh();
+        if (ui.sessionBar) {
+          ui.sessionBar.hidden = true;
+        }
+        setAuthErrorMessage(message);
+        if (ui.authSuccess) {
+          ui.authSuccess.textContent = "";
+        }
+        if (ui.authResetForm) {
+          ui.authResetForm.hidden = true;
+        }
+      }
+
+      function setAuthErrorMessage(message = "", isInvalidCredentials = false) {
+        if (!ui.authError) return;
+        ui.authError.textContent = String(message || "");
+        ui.authError.classList.toggle("auth-invalid-big", Boolean(isInvalidCredentials && message));
+      }
+
+      function hideAuthGate(username, isSuper) {
+        if (ui.authGate) {
+          ui.authGate.classList.remove("show");
+        }
+        if (ui.sessionBar) {
+          ui.sessionBar.hidden = false;
+        }
+        if (ui.sessionUser) {
+          const safeUsername = escapeHtml(String(username || ""));
+          if (isSuper) {
+            ui.sessionUser.innerHTML = `Пользователь: ${safeUsername} (суперпользователь)`;
+          } else {
+            ui.sessionUser.innerHTML = `Пользователь: <span class="session-user-login">${safeUsername}</span>`;
+          }
+        }
+      }
+
+      function applyAuthState(username, isSuper) {
+        state.currentUsername = String(username || "").trim();
+        state.isSuper = isSuper === true;
+        document.body.classList.toggle("super-mode", state.isSuper);
+        applyReadOnlyMode();
+        renderUserFilterOptions();
+        renderSuperUserOptions();
+        if (state.isSuper) {
+          startSuperRefresh();
+          void loadSuperUsers();
+        } else {
+          stopSuperRefresh();
+        }
+        startOrderRefresh();
+        hideAuthGate(username, state.isSuper);
+      }
+
+      function isFormLocked() {
+        return state.readOnly && !state.isSuper;
+      }
+
+      function applyReadOnlyMode() {
+        state.readOnly = state.isSuper === true;
+        const formDisabled = isFormLocked();
+        if (ui.readOnlyBanner) {
+          ui.readOnlyBanner.hidden = !(state.readOnly && !state.editingExpenseId);
+        }
+        if (ui.superRefreshBtn) {
+          ui.superRefreshBtn.hidden = !state.isSuper;
+        }
+        if (!state.isSuper) {
+          state.userFilter = "";
+          state.superUserId = "";
+          if (ui.userFilter) {
+            ui.userFilter.value = "";
+          }
+          if (ui.userFilterRow) {
+            ui.userFilterRow.hidden = true;
+          }
+        }
+        const formTargets = [
+          ui.entryType,
+          ui.amount,
+          ui.expenseDate,
+          ui.orderSelect,
+          ui.orderManual,
+          ui.note,
+          ui.expenseSubmitBtn,
+          ui.cancelEditBtn
+        ];
+        const mediaTargets = [
+          ui.cameraBtn,
+          ui.galleryBtn,
+          ui.cameraInput,
+          ui.galleryInput
+        ];
+        for (const el of formTargets) {
+          if (el) {
+            el.disabled = formDisabled;
+          }
+        }
+        for (const el of mediaTargets) {
+          if (el) {
+            el.disabled = formDisabled;
+          }
+        }
+        if (ui.superUserSelect) {
+          ui.superUserSelect.disabled = state.isSuper ? formDisabled : true;
+        }
+        if (formDisabled && state.editingExpenseId) {
+          stopEditing(true, true);
+        }
+      }
+
+      function startSuperRefresh() {
+        stopSuperRefresh();
+        state.superRefreshTimer = setInterval(() => {
+          void refreshSuperData();
+        }, 30000);
+        void refreshSuperData();
+      }
+
+      function stopSuperRefresh() {
+        if (state.superRefreshTimer) {
+          clearInterval(state.superRefreshTimer);
+          state.superRefreshTimer = null;
+        }
+      }
+
+      function startOrderRefresh() {
+        stopOrderRefresh();
+        state.orderRefreshTimer = setInterval(() => {
+          void loadOrderOptions().then(() => render());
+        }, 60000);
+      }
+
+      function stopOrderRefresh() {
+        if (state.orderRefreshTimer) {
+          clearInterval(state.orderRefreshTimer);
+          state.orderRefreshTimer = null;
+        }
+      }
+
+      async function refreshSuperData() {
+        if (!state.isSuper || state.editingExpenseId) {
+          return;
+        }
+        const loaded = await loadFromServer();
+        if (loaded) {
+          persistLocalOnly();
+          await loadOrderOptions();
+          await loadSuperUsers();
+          render();
+        }
+      }
+
+      async function superDeleteExpense(item) {
+        if (!state.isSuper) {
+          return;
+        }
+        const owner = String(item?.owner || "").trim();
+        const ownerId = Number.isFinite(Number(item?.ownerId)) ? Number(item.ownerId) : 0;
+        try {
+          const response = await fetch(API_URL, {
+            method: "POST",
+            credentials: "same-origin",
+            cache: "no-store",
+            headers: { "Content-Type": "application/json", "Accept": "application/json" },
+            body: JSON.stringify({
+              action: "super_delete",
+              id: String(item.id || ""),
+              owner: owner || undefined,
+              owner_id: ownerId > 0 ? ownerId : undefined
+            })
+          });
+          const payload = await response.json().catch(() => ({}));
+          if (!response.ok || payload?.ok !== true) {
+            if (response.status === 401) {
+              showAuthGate("Сессия завершена, войдите снова");
+              return;
+            }
+            const error = String(payload?.error || "");
+            if (error === "owner_not_found") {
+              showToast("Пользователь не найден");
+              return;
+            }
+            if (error === "ambiguous_delete") {
+              showToast("Найдено несколько записей с таким ID");
+              return;
+            }
+            showToast("Не удалось удалить запись");
+            return;
+          }
+          if (payload?.message === "not_found") {
+            showToast("Запись уже удалена");
+            await refreshSuperData();
+            return;
+          }
+          showToast("Запись удалена");
+          await refreshSuperData();
+        } catch (error) {
+          showToast("Не удалось удалить запись");
+        }
+      }
+
+      async function superUpdateExpense(item) {
+        if (!state.isSuper) {
+          return false;
+        }
+        const owner = String(item?.owner || "").trim();
+        const ownerId = Number.isFinite(Number(item?.ownerId)) ? Number(item.ownerId) : 0;
+        const payload = {
+          action: "super_update",
+          id: String(item?.id || ""),
+          type: item?.type,
+          category: item?.category,
+          amount: item?.amount,
+          date: item?.date,
+          note: item?.note || "",
+          orderId: item?.orderId || "",
+          photos: Array.isArray(item?.photos) ? item.photos : [],
+          owner: owner || undefined,
+          owner_id: ownerId > 0 ? ownerId : undefined
+        };
+        try {
+          const response = await fetch(API_URL, {
+            method: "POST",
+            credentials: "same-origin",
+            cache: "no-store",
+            headers: { "Content-Type": "application/json", "Accept": "application/json" },
+            body: JSON.stringify(payload)
+          });
+          const data = await response.json().catch(() => ({}));
+          if (!response.ok || data?.ok !== true) {
+            if (response.status === 401) {
+              showAuthGate("Сессия завершена, войдите снова");
+              return false;
+            }
+            const error = String(data?.error || "");
+            if (error === "owner_not_found") {
+              showToast("Пользователь не найден");
+              return false;
+            }
+            if (error === "ambiguous_update") {
+              showToast("Найдено несколько записей с таким ID");
+              return false;
+            }
+            if (error === "not_found") {
+              showToast("Запись не найдена");
+              return false;
+            }
+            if (error === "invalid_payload") {
+              showToast("Некорректные данные записи");
+              return false;
+            }
+            showToast("Не удалось обновить запись");
+            return false;
+          }
+          if (data?.message === "not_found") {
+            showToast("Запись не найдена");
+            return false;
+          }
+          return true;
+        } catch (error) {
+          showToast("Не удалось обновить запись");
+          return false;
+        }
+      }
+
+      async function superCreateExpense(item) {
+        if (!state.isSuper) {
+          return false;
+        }
+        const ownerId = Number.isFinite(Number(item?.ownerId)) ? Number(item.ownerId) : 0;
+        if (ownerId <= 0) {
+          showToast("Выберите пользователя");
+          return false;
+        }
+        const payload = {
+          action: "super_create",
+          id: String(item?.id || ""),
+          type: item?.type,
+          category: item?.category,
+          amount: item?.amount,
+          date: item?.date,
+          note: item?.note || "",
+          orderId: item?.orderId || "",
+          photos: Array.isArray(item?.photos) ? item.photos : [],
+          owner_id: ownerId
+        };
+        try {
+          const response = await fetch(API_URL, {
+            method: "POST",
+            credentials: "same-origin",
+            cache: "no-store",
+            headers: { "Content-Type": "application/json", "Accept": "application/json" },
+            body: JSON.stringify(payload)
+          });
+          const data = await response.json().catch(() => ({}));
+          if (!response.ok || data?.ok !== true) {
+            if (response.status === 401) {
+              showAuthGate("Сессия завершена, войдите снова");
+              return false;
+            }
+            const error = String(data?.error || "");
+            if (error === "owner_not_found") {
+              showToast("Пользователь не найден");
+              return false;
+            }
+            if (error === "duplicate_id") {
+              showToast("Запись с таким ID уже существует");
+              return false;
+            }
+            if (error === "invalid_payload") {
+              showToast("Некорректные данные записи");
+              return false;
+            }
+            showToast("Не удалось сохранить запись");
+            return false;
+          }
+          return true;
+        } catch (error) {
+          showToast("Не удалось сохранить запись");
+          return false;
+        }
+      }
+
+      async function fetchAuthSession() {
+        try {
+          const response = await fetch(`${API_URL}?action=session`, {
+            method: "GET",
+            credentials: "same-origin",
+            cache: "no-store",
+            headers: { "Accept": "application/json" }
+          });
+          if (!response.ok) {
+            return { loggedIn: false, username: "", isSuper: false };
+          }
+          const payload = await response.json();
+          return {
+            loggedIn: payload?.logged_in === true,
+            username: String(payload?.username || ""),
+            isSuper: payload?.is_super === true
+          };
+        } catch (error) {
+          return { loggedIn: false, username: "", isSuper: false };
+        }
+      }
+
+      async function onAuthSubmit(event) {
+        event.preventDefault();
+        const username = String(ui.authUsername.value || "").trim();
+        const password = String(ui.authPassword.value || "");
+        if (ui.authSuccess) {
+          ui.authSuccess.textContent = "";
+        }
+        if (!username || !password) {
+          setAuthErrorMessage("Заполните логин и пароль");
+          return;
+        }
+        ui.authSubmitBtn.disabled = true;
+        try {
+          const response = await fetch(API_URL, {
+            method: "POST",
+            credentials: "same-origin",
+            headers: { "Content-Type": "application/json", "Accept": "application/json" },
+            body: JSON.stringify({ action: state.authMode, username, password })
+          });
+          const payload = await response.json().catch(() => ({}));
+          if (!response.ok || payload?.ok !== true) {
+            const errorCode = String(payload?.error || "");
+            const errorMessage = getAuthErrorMessage(errorCode);
+            setAuthErrorMessage(errorMessage, errorCode === "invalid_credentials");
+            if (errorCode === "invalid_credentials") {
+              showToast(errorMessage, 4500, "toast-auth-invalid");
+            }
+            return;
+          }
+          const resolvedUsername = String(payload.username || username);
+          applyAuthState(resolvedUsername, payload?.is_super === true);
+          ui.authForm.reset();
+          await loadDataAfterAuth();
+        } finally {
+          ui.authSubmitBtn.disabled = false;
+        }
+      }
+
+      function onAuthSwitch() {
+        setAuthMode(state.authMode === "login" ? "register" : "login");
+      }
+
+      async function onAuthRemind() {
+        const username = String(ui.authUsername.value || "").trim();
+        if (ui.authSuccess) {
+          ui.authSuccess.textContent = "";
+        }
+        if (!username) {
+          setAuthErrorMessage("Введите логин для восстановления");
+          return;
+        }
+        ui.authRemindBtn.disabled = true;
+        setAuthErrorMessage("");
+        try {
+          const response = await fetch(`${API_URL}?action=remind_password`, {
+            method: "POST",
+            credentials: "same-origin",
+            headers: { "Content-Type": "application/json", "Accept": "application/json" },
+            body: JSON.stringify({ action: "remind_password", username })
+          });
+          const payload = await response.json().catch(() => ({}));
+          if (!response.ok || payload?.ok !== true) {
+            setAuthErrorMessage(getAuthErrorMessage(payload?.error));
+            return;
+          }
+          if (ui.authSuccess) {
+            const tempPassword = String(payload?.temporary_password || "");
+            ui.authSuccess.textContent = tempPassword
+              ? `Временный пароль: ${tempPassword}. Ниже можно сразу задать свой пароль.`
+              : (payload?.message || "Новый пароль создан.");
+          }
+          if (ui.authResetForm) {
+            ui.authResetForm.hidden = false;
+          }
+          if (ui.authNewPassword) {
+            ui.authNewPassword.focus();
+          }
+        } finally {
+          ui.authRemindBtn.disabled = false;
+        }
+      }
+
+      async function onSaveNewPassword() {
+        const username = String(ui.authUsername.value || "").trim();
+        const newPassword = String(ui.authNewPassword?.value || "");
+        if (ui.authSuccess) {
+          ui.authSuccess.textContent = "";
+        }
+        if (!username) {
+          setAuthErrorMessage("Введите логин");
+          return;
+        }
+        if (newPassword.length < 6) {
+          setAuthErrorMessage("Пароль должен быть не короче 6 символов");
+          return;
+        }
+        ui.authSaveNewPasswordBtn.disabled = true;
+        setAuthErrorMessage("");
+        try {
+          const response = await fetch(`${API_URL}?action=complete_password_reset`, {
+            method: "POST",
+            credentials: "same-origin",
+            headers: { "Content-Type": "application/json", "Accept": "application/json" },
+            body: JSON.stringify({ action: "complete_password_reset", username, new_password: newPassword })
+          });
+          const payload = await response.json().catch(() => ({}));
+          if (!response.ok || payload?.ok !== true) {
+            setAuthErrorMessage(getAuthErrorMessage(payload?.error));
+            return;
+          }
+          if (ui.authSuccess) {
+            ui.authSuccess.textContent = payload?.message || "Новый пароль сохранён.";
+          }
+          if (ui.authResetForm) {
+            ui.authResetForm.hidden = true;
+          }
+          if (ui.authPassword) {
+            ui.authPassword.value = newPassword;
+          }
+          if (ui.authNewPassword) {
+            ui.authNewPassword.value = "";
+          }
+        } finally {
+          ui.authSaveNewPasswordBtn.disabled = false;
+        }
+      }
+
+      async function onLogout() {
+        try {
+          await fetch(API_URL, {
+            method: "POST",
+            credentials: "same-origin",
+            headers: { "Content-Type": "application/json", "Accept": "application/json" },
+            body: JSON.stringify({ action: "logout" })
+          });
+        } catch (error) {
+          // ignore
+        }
+        state.expenses = [];
+        state.isSuper = false;
+        state.currentUsername = "";
+        state.superUsers = [];
+        state.superUserId = "";
+        document.body.classList.remove("super-mode");
+        applyReadOnlyMode();
+        renderSuperUserOptions();
+        stopSuperRefresh();
+        stopOrderRefresh();
+        stopEditing(true);
+        render();
+        setAuthMode("login");
+        showAuthGate();
+      }
+
+      function getAuthErrorMessage(code) {
+        if (code === "invalid_username") return "Логин: 3-32 символа (буквы, цифры, _ или -)";
+        if (code === "password_too_short") return "Пароль должен быть не короче 6 символов";
+        if (code === "username_exists") return "Такой логин уже занят";
+        if (code === "invalid_credentials") return "Неверный логин или пароль для раздела Расходы";
+        if (code === "blocked_user") return "Этот пользователь заблокирован администратором";
+        if (code === "missing_credentials") return "Введите логин и пароль";
+        if (code === "missing_username") return "Введите логин для восстановления";
+        if (code === "username_not_found") return "Пользователь страницы Расходы не найден";
+        if (code === "reset_not_allowed") return "Сначала получите временный пароль";
+        return "Ошибка авторизации";
+      }
+
+      async function onAddExpense(event) {
+        event.preventDefault();
+        if (isFormLocked()) {
+          showToast("Режим просмотра: изменения недоступны");
+          return;
+        }
+        ui.expenseSubmitBtn.disabled = true;
+        const selectedCategory = String(ui.entryType.value || "").trim();
+        const category = normalizeEntryCategory(selectedCategory, "expense");
+        const type = getTypeFromCategory(category);
+        const amount = parseAmountValue(ui.amount.value);
+        const date = ui.expenseDate.value;
+        const note = ui.note.value.trim();
+        const orderId = getOrderIdFromForm();
+        const orderInfo = orderId ? getOrderInfoById(orderId) : null;
+        const recordId = state.editingExpenseId || makeId();
+        const editingItem = state.editingExpenseId
+          ? state.expenses.find((item) => item.id === state.editingExpenseId)
+          : null;
+
+        if (!ENTRY_CATEGORY_KEYS.includes(selectedCategory)) {
+          showToast("Выберите категорию");
+          ui.expenseSubmitBtn.disabled = false;
+          return;
+        }
+        if (!Number.isFinite(amount) || amount <= 0) {
+          showToast("Введите корректную сумму");
+          ui.expenseSubmitBtn.disabled = false;
+          return;
+        }
+        if (!date) {
+          showToast("Выберите дату");
+          ui.expenseSubmitBtn.disabled = false;
+          return;
+        }
+
+        if ((state.formPhotos.length + state.pendingPhotoFiles.length) > 6) {
+          showToast("Можно прикрепить максимум 6 фото");
+          ui.expenseSubmitBtn.disabled = false;
+          return;
+        }
+
+        if (state.editingExpenseId && !editingItem) {
+          stopEditing(false);
+          showToast("Запись для редактирования не найдена");
+          ui.expenseSubmitBtn.disabled = false;
+          return;
+        }
+
+        const selectedOwner = state.isSuper ? getSelectedSuperUser() : null;
+        if (state.isSuper && !state.editingExpenseId && !selectedOwner) {
+          showToast("Выберите пользователя");
+          ui.expenseSubmitBtn.disabled = false;
+          return;
+        }
+        if (state.isSuper && state.editingExpenseId && !selectedOwner && !(editingItem?.ownerId || editingItem?.owner)) {
+          showToast("Выберите пользователя");
+          ui.expenseSubmitBtn.disabled = false;
+          return;
+        }
+
+        let uploadedPhotos = [];
+        if (state.pendingPhotoFiles.length > 0) {
+          const targetOwnerId = state.isSuper
+            ? (state.editingExpenseId ? Number(editingItem?.ownerId || 0) : Number(selectedOwner?.id || 0))
+            : 0;
+          uploadedPhotos = await uploadPhotos(recordId, state.pendingPhotoFiles, targetOwnerId);
+          if (uploadedPhotos.length !== state.pendingPhotoFiles.length) {
+            showToast("Часть фото не загрузилась");
+          }
+        }
+
+        const photos = uniquePhotos([...state.formPhotos, ...uploadedPhotos]).slice(0, 6);
+
+        if (state.editingExpenseId) {
+          const idx = state.expenses.findIndex((item) => item.id === state.editingExpenseId);
+          const current = state.expenses[idx];
+          const resolvedOwner = state.isSuper ? (selectedOwner || {
+            id: Number(current?.ownerId || 0),
+            username: String(current?.owner || "")
+          }) : null;
+          const updated = {
+            ...current,
+            type,
+            category,
+            amount: round2(amount),
+            date,
+            note,
+            orderId,
+            orderClientName: orderInfo?.clientName || "",
+            orderNotes: orderInfo?.notes || "",
+            photos,
+            ownerId: resolvedOwner ? Number(resolvedOwner.id || 0) : current.ownerId,
+            owner: resolvedOwner ? String(resolvedOwner.username || "") : current.owner
+          };
+          if (state.isSuper) {
+            const saved = await superUpdateExpense(updated);
+            if (saved) {
+              state.expenses[idx] = updated;
+              state.expenses.sort((a, b) => sortByDateDesc(a, b));
+              stopEditing(true);
+              if (ui.historyDetails) {
+                ui.historyDetails.open = true;
+              }
+              await loadOrderOptions();
+              render();
+              await refreshSuperData();
+              showToast("Запись обновлена");
+            }
+            ui.expenseSubmitBtn.disabled = false;
+            return;
+          }
+          state.expenses[idx] = updated;
+          state.expenses.sort((a, b) => sortByDateDesc(a, b));
+          persist();
+          stopEditing(true);
+          if (ui.historyDetails) {
+            ui.historyDetails.open = true;
+          }
+          await loadOrderOptions();
+          render();
+          showToast("Запись обновлена");
+          ui.expenseSubmitBtn.disabled = false;
+        } else if (state.isSuper) {
+          const created = await superCreateExpense({
+            id: recordId,
+            type,
+            category,
+            amount: round2(amount),
+            date,
+            note,
+            orderId,
+            photos,
+            ownerId: Number(selectedOwner?.id || 0)
+          });
+          if (created) {
+            state.lastAddedExpenseId = recordId;
+            ui.expenseForm.reset();
+            autoGrowNote();
+            ui.entryType.value = "expense";
+            ui.expenseDate.value = todayIso();
+            if (ui.orderManual) ui.orderManual.value = "";
+            renderOrderOptions();
+            renderSuperUserOptions();
+            state.formPhotos = [];
+            state.pendingPhotoFiles = [];
+            clearPendingPreviewUrls();
+            renderFormPhotoGrid();
+            if (ui.historyDetails) {
+              ui.historyDetails.open = true;
+            }
+            await loadOrderOptions();
+            await refreshSuperData();
+            showToast("Запись сохранена");
+          }
+          ui.expenseSubmitBtn.disabled = false;
+          return;
+        } else {
+          const expense = {
+            id: recordId,
+            type,
+            category,
+            amount: round2(amount),
+            date,
+            note,
+            orderId,
+            orderClientName: orderInfo?.clientName || "",
+            orderNotes: orderInfo?.notes || "",
+            photos,
+            createdAt: new Date().toISOString()
+          };
+
+          state.expenses.unshift(expense);
+          state.expenses.sort((a, b) => sortByDateDesc(a, b));
+          state.lastAddedExpenseId = expense.id;
+          persist();
+          ui.expenseForm.reset();
+          autoGrowNote();
+          ui.expenseDate.value = todayIso();
+          if (ui.orderManual) ui.orderManual.value = "";
+          renderOrderOptions();
+          state.formPhotos = [];
+          state.pendingPhotoFiles = [];
+          renderFormPhotoGrid();
+          if (ui.historyDetails) {
+            ui.historyDetails.open = true;
+          }
+          await loadOrderOptions();
+          render();
+          setTimeout(() => {
+            if (state.lastAddedExpenseId === expense.id) {
+              state.lastAddedExpenseId = "";
+              render();
+            }
+          }, 1600);
+          showToast("Запись сохранена");
+          ui.expenseSubmitBtn.disabled = false;
+        }
+      }
+
+      function toggleCustomPeriodInputs() {
+        const isCustom = state.period === "custom";
+        ui.customPeriodRow.hidden = !isCustom;
+      }
+
+      function onListClick(event) {
+        const orderLink = event.target.closest("a.expense-order-link[data-order-id]");
+        if (orderLink) {
+          const orderId = normalizeOrderIdInput(orderLink.dataset.orderId || "");
+          if (orderId.startsWith("zakaz-")) {
+            event.preventDefault();
+            openOrderModal(orderId);
+            return;
+          }
+        }
+
+        const photoLink = event.target.closest("a.expense-photo-link");
+        if (photoLink) {
+          event.preventDefault();
+          const src = photoLink.dataset.fullSrc || photoLink.getAttribute("href") || "";
+          if (src) {
+            openLightbox(src);
+          }
+          return;
+        }
+
+        const editButton = event.target.closest("button[data-edit-id]");
+        if (editButton) {
+          if (state.readOnly && !state.isSuper) {
+            showToast("Режим просмотра: изменения недоступны");
+            return;
+          }
+          const id = editButton.dataset.editId;
+          const found = state.expenses.find((item) => item.id === id);
+          if (!found) {
+            showToast("Запись не найдена");
+            return;
+          }
+          startEditingExpense(found);
+          return;
+        }
+
+        const deleteButton = event.target.closest("button[data-delete-id]");
+        if (!deleteButton) {
+          return;
+        }
+        if (state.readOnly && !state.isSuper) {
+          showToast("Режим просмотра: изменения недоступны");
+          return;
+        }
+        const id = deleteButton.dataset.deleteId;
+        const found = state.expenses.find((item) => item.id === id);
+        if (!found) {
+          return;
+        }
+        const ownerSuffix = state.isSuper && found.owner
+          ? ` (${found.owner})`
+          : (state.isSuper && found.ownerId ? ` (ID ${found.ownerId})` : "");
+        const categoryLabel = getCategoryLabel(normalizeEntryCategory(found.category, found.type || "expense"));
+        const ok = confirm(`Удалить ${categoryLabel} ${formatMoney(found.amount)} за ${formatDate(found.date)}?${ownerSuffix}`);
+        if (!ok) {
+          return;
+        }
+        if (state.isSuper) {
+          void superDeleteExpense(found);
+          return;
+        }
+        state.expenses = state.expenses.filter((item) => item.id !== id);
+        persist();
+        if (state.editingExpenseId === id) {
+          stopEditing(true);
+        }
+        render();
+        showToast("Запись удалена");
+      }
+
+      function onDocumentKeydown(event) {
+        if (event.key === "Escape") {
+          hideNoteSuggestions();
+          closeLightbox();
+          closeOrderModal();
+          closeWheelMenu();
+        }
+      }
+
+      function onDocumentClick(event) {
+        if (!event.target.closest("#note") && !event.target.closest("#noteSuggestions")) {
+          hideNoteSuggestions();
+        }
+        const insidePanel = event.target.closest("#wheelMenuPanel");
+        const onToggle = event.target.closest("#wheelMenuToggle");
+        if (!insidePanel && !onToggle && ui.wheelMenuPanel?.classList.contains("open")) {
+          closeWheelMenu();
+        }
+      }
+
+      function onNoteSuggestionMouseDown(event) {
+        const button = event.target.closest("button[data-note-suggestion]");
+        if (!button) {
+          return;
+        }
+        event.preventDefault();
+        applyNoteSuggestion(button.dataset.noteSuggestion || "");
+      }
+
+      function clearExpenseSearch() {
+        if (!ui.expenseSearch) {
+          return;
+        }
+        ui.expenseSearch.value = "";
+        state.searchQuery = "";
+        render();
+        ui.expenseSearch.focus();
+      }
+
+      function onTypeStatKeydown(event) {
+        if (event.key !== "Enter" && event.key !== " ") {
+          return;
+        }
+        event.preventDefault();
+        const type = event.currentTarget?.id === "incomeStat" ? "income" : "expense";
+        toggleTypeFilter(type);
+      }
+
+      function resetFilters() {
+        state.period = "all";
+        state.periodFrom = "";
+        state.periodTo = "";
+        state.typeFilter = "";
+        state.categoryFilter = "";
+        state.userFilter = "";
+        state.searchQuery = "";
+        if (ui.periodSelect) {
+          ui.periodSelect.value = "all";
+        }
+        if (ui.categoryFilter) {
+          ui.categoryFilter.value = "";
+        }
+        if (ui.periodFrom) {
+          ui.periodFrom.value = "";
+        }
+        if (ui.periodTo) {
+          ui.periodTo.value = "";
+        }
+        if (ui.userFilter) {
+          ui.userFilter.value = "";
+        }
+        if (ui.expenseSearch) {
+          ui.expenseSearch.value = "";
+        }
+        toggleCustomPeriodInputs();
+        render();
+      }
+
+      function toggleTypeFilter(type) {
+        state.typeFilter = state.typeFilter === type ? "" : type;
+        render();
+      }
+
+      function openLightbox(src) {
+        if (!ui.photoLightbox || !ui.photoLightboxImg) {
+          return;
+        }
+        ui.photoLightboxImg.src = src;
+        ui.photoLightbox.classList.add("open");
+        ui.photoLightbox.setAttribute("aria-hidden", "false");
+        ui.photoLightbox.removeAttribute("inert");
+        document.body.style.overflow = "hidden";
+        if (ui.photoLightboxClose && typeof ui.photoLightboxClose.focus === "function") {
+          ui.photoLightboxClose.focus();
+        }
+      }
+
+      function closeLightbox() {
+        if (!ui.photoLightbox || !ui.photoLightboxImg) {
+          return;
+        }
+        if (ui.photoLightboxClose && document.activeElement === ui.photoLightboxClose) {
+          ui.photoLightboxClose.blur();
+        }
+        ui.photoLightbox.classList.remove("open");
+        ui.photoLightbox.setAttribute("aria-hidden", "true");
+        ui.photoLightbox.setAttribute("inert", "");
+        ui.photoLightboxImg.src = "";
+        document.body.style.overflow = "";
+      }
+
+      function openOrderModal(orderId) {
+        const info = getOrderInfoById(orderId);
+        const order = info?.order;
+        if (!order || !(info.source === "zakaz" || info.status === "zakaz") || !ui.orderModal || !ui.orderModalBody) {
+          return;
+        }
+        const items = Array.isArray(order.items) ? order.items : [];
+        const rows = items.length
+          ? items.map((item) => `
+              <tr>
+                <td>${escapeHtml(item.name || "—")}</td>
+                <td>${escapeHtml(item.qty || "—")}</td>
+                <td style="text-align:right;">${escapeHtml(formatMoney(Number(item.sum || 0)))}</td>
+              </tr>
+            `).join("")
+          : `<tr><td colspan="3">Позиции не сохранены.</td></tr>`;
+        const car = [order.car_brand, order.car_model].filter(Boolean).join(" ") || "—";
+        const phoneText = String(order.phone || "").trim();
+        const phoneHref = phoneText.replace(/[^\d+]/g, "") || phoneText;
+        const phoneHtml = phoneText
+          ? `<a class="phone-link" href="tel:${escapeHtml(phoneHref)}">${escapeHtml(phoneText)}</a>`
+          : "—";
+        const docNo = order.document_number ? `№${order.document_number}` : `#${String(order.operation_id || "").trim()}`;
+        ui.orderModalBody.innerHTML = `
+          <h3>Заказ-наряд ${escapeHtml(docNo)}</h3>
+          <div class="order-modal-grid">
+            <div><strong>Клиент:</strong> ${escapeHtml(order.client_name || "—")}</div>
+            <div><strong>Телефон:</strong> ${phoneHtml}</div>
+            <div><strong>Авто:</strong> ${escapeHtml(car)}</div>
+            <div><strong>Гос. номер:</strong> ${escapeHtml(order.plate_number || "—")}</div>
+            <div><strong>Тип:</strong> ${escapeHtml(order.car_type || "—")}</div>
+            <div><strong>Радиус:</strong> ${escapeHtml(order.radius || "—")}</div>
+            <div><strong>Создал:</strong> ${escapeHtml(order.created_by_username || "—")}</div>
+            <div><strong>Дата:</strong> ${escapeHtml(formatCreatedTime(order.created_at) || "—")}</div>
+          </div>
+          <table class="order-modal-table">
+            <thead><tr><th>Позиция</th><th>Кол-во</th><th style="text-align:right;">Сумма</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+          <div class="order-modal-total">Итого: ${escapeHtml(formatMoney(Number(order.total || 0)))}</div>
+        `;
+        ui.orderModal.classList.add("open");
+        ui.orderModal.setAttribute("aria-hidden", "false");
+        ui.orderModal.removeAttribute("inert");
+        document.body.style.overflow = "hidden";
+        ui.orderModalClose?.focus();
+      }
+
+      function closeOrderModal() {
+        if (!ui.orderModal) return;
+        if (ui.orderModalClose && document.activeElement === ui.orderModalClose) {
+          ui.orderModalClose.blur();
+        }
+        ui.orderModal.classList.remove("open");
+        ui.orderModal.setAttribute("aria-hidden", "true");
+        ui.orderModal.setAttribute("inert", "");
+        if (ui.orderModalBody) {
+          ui.orderModalBody.innerHTML = "";
+        }
+        document.body.style.overflow = "";
+      }
+
+      function replaceFileExtension(name, ext) {
+        const safeName = String(name || "photo").trim() || "photo";
+        const idx = safeName.lastIndexOf(".");
+        const base = idx > 0 ? safeName.slice(0, idx) : safeName;
+        return `${base}.${ext}`;
+      }
+
+      function getFileExtension(file) {
+        const name = String(file?.name || "").toLowerCase();
+        const idx = name.lastIndexOf(".");
+        return idx >= 0 ? name.slice(idx + 1) : "";
+      }
+
+      function isLikelyImageFile(file) {
+        if (!file) {
+          return false;
+        }
+        if (file.type && /^image\//.test(file.type)) {
+          return true;
+        }
+        const ext = getFileExtension(file);
+        return ["jpg", "jpeg", "png", "gif", "webp", "heic", "heif"].includes(ext);
+      }
+
+      function isHeicLike(file) {
+        const ext = getFileExtension(file);
+        const type = String(file?.type || "").toLowerCase();
+        return ext === "heic" || ext === "heif" || type === "image/heic" || type === "image/heif";
+      }
+
+      function shouldSkipCompression(file) {
+        if (!file || (!/^image\//.test(file.type) && !isLikelyImageFile(file))) {
+          return true;
+        }
+        if (isHeicLike(file)) {
+          return true;
+        }
+        return PHOTO_COMPRESS_SKIP_TYPES.has(file.type);
+      }
+
+      async function loadImageSource(file) {
+        if (!file) {
+          return null;
+        }
+        if (window.createImageBitmap) {
+          try {
+            const bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
+            return {
+              source: bitmap,
+              width: bitmap.width,
+              height: bitmap.height,
+              cleanup: () => bitmap.close && bitmap.close()
+            };
+          } catch (error) {
+            // fallback to Image
+          }
+        }
+        return new Promise((resolve) => {
+          const url = URL.createObjectURL(file);
+          const img = new Image();
+          img.onload = () => {
+            resolve({
+              source: img,
+              width: img.naturalWidth || img.width,
+              height: img.naturalHeight || img.height,
+              cleanup: () => URL.revokeObjectURL(url)
+            });
+          };
+          img.onerror = () => {
+            URL.revokeObjectURL(url);
+            resolve(null);
+          };
+          img.src = url;
+        });
+      }
+
+      function canvasToBlob(canvas, type, quality) {
+        return new Promise((resolve) => {
+          if (!canvas || typeof canvas.toBlob !== "function") {
+            resolve(null);
+            return;
+          }
+          canvas.toBlob((blob) => resolve(blob), type, quality);
+        });
+      }
+
+      async function compressPhotoFile(file) {
+        if (shouldSkipCompression(file)) {
+          return file;
+        }
+        const loaded = await loadImageSource(file);
+        if (!loaded || !loaded.width || !loaded.height) {
+          return file;
+        }
+
+        const maxSide = PHOTO_COMPRESS.maxSide;
+        const largestSide = Math.max(loaded.width, loaded.height);
+        const scale = largestSide > maxSide ? maxSide / largestSide : 1;
+        const targetWidth = Math.max(1, Math.round(loaded.width * scale));
+        const targetHeight = Math.max(1, Math.round(loaded.height * scale));
+
+        if (scale === 1 && file.size <= PHOTO_COMPRESS.minSize) {
+          loaded.cleanup();
+          return file;
+        }
+
+        const canvas = document.createElement("canvas");
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+        const ctx = canvas.getContext("2d", { alpha: file.type === "image/png" });
+        if (!ctx) {
+          loaded.cleanup();
+          return file;
+        }
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = "high";
+        ctx.drawImage(loaded.source, 0, 0, targetWidth, targetHeight);
+        loaded.cleanup();
+
+        const outputType = file.type === "image/png" ? "image/png" : "image/jpeg";
+        const outputQuality = outputType === "image/jpeg" ? PHOTO_COMPRESS.jpegQuality : undefined;
+        const blob = await canvasToBlob(canvas, outputType, outputQuality);
+        if (!blob) {
+          return file;
+        }
+
+        if (scale === 1 && blob.size >= file.size * 0.98) {
+          return file;
+        }
+
+        const extension = outputType === "image/png" ? "png" : "jpg";
+        const outputName = replaceFileExtension(file.name, extension);
+        return new File([blob], outputName, { type: outputType, lastModified: Date.now() });
+      }
+
+      async function compressPhotoFiles(files) {
+        const result = [];
+        for (const file of files) {
+          try {
+            const compressed = await compressPhotoFile(file);
+            result.push(compressed);
+          } catch (error) {
+            result.push(file);
+          }
+        }
+        return result;
+      }
+
+      async function onPhotoInputChange(event) {
+        if (isFormLocked()) {
+          showToast("Режим просмотра: изменения недоступны");
+          if (event.currentTarget) {
+            event.currentTarget.value = "";
+          }
+          return;
+        }
+        const input = event.currentTarget;
+        const files = Array.from(input?.files || []);
+        if (files.length === 0) {
+          return;
+        }
+
+        const freeSlots = 6 - (state.formPhotos.length + state.pendingPhotoFiles.length);
+        if (freeSlots <= 0) {
+          showToast("Лимит 6 фото на запись");
+          input.value = "";
+          return;
+        }
+
+        const accepted = files
+          .filter((file) => isLikelyImageFile(file))
+          .slice(0, freeSlots);
+
+        if (accepted.length === 0) {
+          showToast("Выберите изображения");
+          input.value = "";
+          return;
+        }
+
+        const compressed = await compressPhotoFiles(accepted);
+        state.pendingPhotoFiles = state.pendingPhotoFiles.concat(compressed);
+        input.value = "";
+        renderFormPhotoGrid();
+      }
+
+      function onFormPhotoGridClick(event) {
+        if (isFormLocked()) {
+          showToast("Режим просмотра: изменения недоступны");
+          return;
+        }
+        const removeButton = event.target.closest("button[data-remove-photo]");
+        if (!removeButton) {
+          return;
+        }
+        const target = removeButton.dataset.removePhoto || "";
+        if (target.startsWith("pending:")) {
+          const idx = Number(target.slice(8));
+          if (Number.isInteger(idx) && idx >= 0 && idx < state.pendingPhotoFiles.length) {
+            state.pendingPhotoFiles.splice(idx, 1);
+          }
+        } else {
+          const decoded = decodeURIComponent(target);
+          state.formPhotos = state.formPhotos.filter((item) => item !== decoded);
+        }
+        renderFormPhotoGrid();
+      }
+
+      function renderFormPhotoGrid() {
+        if (!ui.formPhotoGrid) {
+          return;
+        }
+        clearPendingPreviewUrls();
+        const savedHtml = state.formPhotos.map((src) => {
+          const safeSrc = escapeHtml(src);
+          const encoded = encodeURIComponent(src);
+          return [
+            `<div class="photo-item">`,
+            `<img src="${safeSrc}" alt="Фото">`,
+            `<button type="button" class="photo-remove" data-remove-photo="${encoded}" aria-label="Удалить фото">×</button>`,
+            `</div>`
+          ].join("");
+        });
+        const pendingHtml = state.pendingPhotoFiles.map((file, index) => {
+          const url = URL.createObjectURL(file);
+          state.pendingPhotoPreviewUrls.push(url);
+          return [
+            `<div class="photo-item pending">`,
+            `<img src="${escapeHtml(url)}" alt="Новое фото">`,
+            `<button type="button" class="photo-remove" data-remove-photo="pending:${index}" aria-label="Убрать фото">×</button>`,
+            `</div>`
+          ].join("");
+        });
+        ui.formPhotoGrid.innerHTML = [...savedHtml, ...pendingHtml].join("");
+      }
+
+      function clearPendingPreviewUrls() {
+        for (const url of state.pendingPhotoPreviewUrls) {
+          try {
+            URL.revokeObjectURL(url);
+          } catch (error) {
+            // ignore
+          }
+        }
+        state.pendingPhotoPreviewUrls = [];
+      }
+
+      function startEditingExpense(expense) {
+        state.editingExpenseId = expense.id;
+        const normalizedCategory = normalizeEntryCategory(expense.category, expense.type || "expense");
+        ui.entryType.value = ENTRY_CATEGORY_KEYS.includes(normalizedCategory)
+          ? normalizedCategory
+          : (expense.type === "income" ? "income" : "expense");
+        ui.amount.value = formatAmountForInput(expense.amount);
+        ui.expenseDate.value = expense.date;
+        ui.note.value = expense.note || "";
+        autoGrowNote();
+        if (state.isSuper) {
+          const ownerId = Number.isFinite(Number(expense.ownerId)) ? String(expense.ownerId) : "";
+          if (ownerId) {
+            state.superUserId = ownerId;
+          } else if (expense.owner) {
+            const match = state.superUsers.find((user) => user.username === expense.owner);
+            state.superUserId = match ? String(match.id) : "";
+          } else {
+            state.superUserId = "";
+          }
+          renderSuperUserOptions();
+        }
+        const orderId = normalizeOrderIdInput(expense.orderId || "");
+        if (ui.orderManual) ui.orderManual.value = orderId;
+        renderOrderOptions(orderId);
+        state.formPhotos = uniquePhotos(Array.isArray(expense.photos) ? expense.photos : []);
+        state.pendingPhotoFiles = [];
+        renderFormPhotoGrid();
+        ui.expenseSubmitBtn.textContent = "Сохранить изменения";
+        ui.cancelEditBtn.hidden = false;
+        applyReadOnlyMode();
+        scrollToElement(ui.expenseForm);
+        setTimeout(() => ui.amount.focus(), 180);
+        showToast("Режим редактирования");
+      }
+
+      function stopEditing(resetForm, skipApply = false) {
+        state.editingExpenseId = "";
+        ui.expenseSubmitBtn.textContent = "Добавить запись";
+        ui.cancelEditBtn.hidden = true;
+        if (resetForm) {
+          ui.expenseForm.reset();
+          ui.entryType.value = "expense";
+          ui.expenseDate.value = todayIso();
+          if (ui.orderManual) ui.orderManual.value = "";
+          renderOrderOptions();
+          if (state.isSuper) {
+            renderSuperUserOptions();
+          }
+          state.formPhotos = [];
+          state.pendingPhotoFiles = [];
+          clearPendingPreviewUrls();
+          renderFormPhotoGrid();
+          autoGrowNote();
+        }
+        hideNoteSuggestions();
+        if (!skipApply) {
+          applyReadOnlyMode();
+        }
+      }
+
+      function render() {
+        renderUserFilterOptions();
+        renderCategoryFilterOptions();
+        const periodFiltered = filterExpenses(state.expenses, state.period, state.periodFrom, state.periodTo);
+        const typeFiltered = filterExpensesByType(periodFiltered, state.typeFilter);
+        const categoryFiltered = filterExpensesByCategory(typeFiltered, state.categoryFilter);
+        const queryFiltered = filterExpensesByQuery(categoryFiltered, state.searchQuery);
+        const filtered = filterExpensesByUser(queryFiltered, state.userFilter);
+        renderStats(filtered);
+        renderWeeklyChart(state.expenses);
+        renderList(filtered);
+        focusLinkedExpenseIfNeeded();
+        renderNoteSuggestions();
+      }
+
+      function focusLinkedExpenseIfNeeded() {
+        if (!state.linkedExpenseId || state.linkedExpenseFocused || !ui.expenseList) {
+          return;
+        }
+        const cards = Array.from(ui.expenseList.querySelectorAll("article.expense[data-expense-id]"));
+        const target = cards.find((card) => String(card.dataset.expenseId || "") === state.linkedExpenseId);
+        if (!target) {
+          return;
+        }
+        state.linkedExpenseFocused = true;
+        if (ui.historyDetails) {
+          ui.historyDetails.open = true;
+        }
+        target.classList.add("linked-expense-target");
+        scrollToElement(target);
+        setTimeout(() => {
+          target.classList.remove("linked-expense-target");
+        }, 2600);
+      }
+
+      function renderCategoryFilterOptions() {
+        if (!ui.categoryFilter) {
+          return;
+        }
+
+        const options = [
+          `<option value="">Все категории</option>`,
+          ...ENTRY_CATEGORY_KEYS.map((key) => `<option value="${escapeHtml(key)}">${escapeHtml(getCategoryLabel(key))}</option>`)
+        ];
+        const current = String(state.categoryFilter || "");
+        ui.categoryFilter.innerHTML = options.join("");
+        if (current && ENTRY_CATEGORY_KEYS.includes(current)) {
+          ui.categoryFilter.value = current;
+        } else {
+          state.categoryFilter = "";
+          ui.categoryFilter.value = "";
+        }
+      }
+
+      function renderStats(filtered) {
+        const income = filtered.reduce((acc, item) => acc + (item.type === "income" ? item.amount : 0), 0);
+        const expense = filtered.reduce((acc, item) => acc + (item.type === "expense" ? item.amount : 0), 0);
+        const balance = round2(income - expense);
+        const count = filtered.length;
+        ui.sumFiltered.textContent = formatMoney(balance);
+        ui.countFiltered.textContent = String(count);
+        ui.incomeFiltered.textContent = formatMoney(income);
+        ui.expenseFiltered.textContent = formatMoney(expense);
+        ui.incomeStat?.classList.toggle("is-active", state.typeFilter === "income");
+        ui.expenseStat?.classList.toggle("is-active", state.typeFilter === "expense");
+      }
+
+      function renderWeeklyChart(allExpenses) {
+        const labels = [];
+        const sums = [];
+        const now = startOfDay(new Date());
+
+        for (let i = 6; i >= 0; i -= 1) {
+          const day = new Date(now);
+          day.setDate(now.getDate() - i);
+          const iso = toIso(day);
+          const sum = allExpenses.reduce((acc, item) => acc + (item.date === iso ? getSignedAmount(item) : 0), 0);
+          labels.push(day.toLocaleDateString("ru-RU", { day: "2-digit", month: "2-digit" }));
+          sums.push(sum);
+        }
+
+        const max = Math.max(1, ...sums.map((value) => Math.abs(value)));
+        ui.weeklyChart.innerHTML = sums.map((value, idx) => {
+          const height = Math.max(6, Math.round((Math.abs(value) / max) * 92));
+          const barClass = value < 0 ? "bar negative" : "bar";
+          return [
+            `<div class="bar-col" title="${escapeHtml(labels[idx])}: ${escapeHtml(formatSignedMoney(Math.abs(value), value < 0 ? "expense" : "income"))}">`,
+            `<div class="${barClass}" style="height:${height}px"></div>`,
+            `<span>${escapeHtml(labels[idx])}</span>`,
+            `</div>`
+          ].join("");
+        }).join("");
+      }
+
+      function renderList(filtered) {
+        if (filtered.length === 0) {
+          const query = normalizeSearchText(state.searchQuery);
+          const hasAnyRecords = Array.isArray(state.expenses) && state.expenses.length > 0;
+          if (query) {
+            ui.expenseList.innerHTML = `<div class="empty">По запросу «${escapeHtml(state.searchQuery.trim())}» ничего не найдено.</div>`;
+          } else if (hasAnyRecords) {
+            ui.expenseList.innerHTML = `<div class="empty">Записи есть, но текущие фильтры их скрывают. Нажмите «Сбросить фильтры».</div>`;
+          } else {
+            ui.expenseList.innerHTML = `<div class="empty">Записей пока нет. Добавьте первую запись выше.</div>`;
+          }
+          return;
+        }
+
+        ui.expenseList.innerHTML = filtered.map((item, idx) => {
+          const note = item.note ? `<div class="expense-note">${escapeHtml(item.note)}</div>` : "";
+          const photos = Array.isArray(item.photos) ? item.photos : [];
+          const photosBlock = photos.length > 0
+            ? `<div class="expense-photos">${photos.map((src) => `<a class="expense-photo-link" href="${escapeHtml(src)}" data-full-src="${escapeHtml(src)}"><img src="${escapeHtml(src)}" data-src="${escapeHtml(src)}" data-retry="0" loading="lazy" decoding="async" fetchpriority="low" alt="Фото операции"></a>`).join("")}</div>`
+            : "";
+          const dateText = formatDate(item.date);
+          const createdTime = formatCreatedTime(item.createdAt);
+          const createdLabel = createdTime
+            ? `<span class="expense-created">Создано: ${escapeHtml(createdTime)}</span>`
+            : "";
+          const ownerLabel = state.isSuper && item.owner
+            ? `<span class="expense-owner">Пользователь: ${escapeHtml(item.owner)}</span>`
+            : "";
+          const orderId = normalizeOrderIdInput(item.orderId || "");
+          const fallbackOrderInfo = item.orderClientName || item.orderNotes ? {
+            clientName: String(item.orderClientName || "").trim(),
+            notes: String(item.orderNotes || "").trim()
+          } : null;
+          const orderInfo = orderId ? (getOrderInfoById(orderId) || fallbackOrderInfo) : null;
+          const orderHref = orderId ? buildOrderHref(orderId) : "";
+          const orderBadge = orderId
+            ? `<a class="expense-order expense-order-link" href="${escapeHtml(orderHref)}" data-order-id="${escapeHtml(orderId)}">${orderId.startsWith("zakaz-") ? "Заказ-наряд" : "Заказ"} #${escapeHtml(orderId.replace(/^zakaz-/, ""))}</a>`
+            : "";
+          const orderName = orderInfo?.clientName
+            ? `<span class="expense-order">Клиент: ${escapeHtml(orderInfo.clientName)}</span>`
+            : "";
+          const metaLeft = `<div class="expense-meta-left"><span>${escapeHtml(dateText)}</span>${createdLabel}${orderBadge}${orderName}${ownerLabel}</div>`;
+          let actionsBlock = "";
+          if (state.isSuper) {
+            actionsBlock = [
+              `<div class="expense-actions">`,
+              `<button class="icon-btn edit-btn" type="button" data-edit-id="${escapeHtml(item.id)}">Редактировать</button>`,
+              `<button class="icon-btn" type="button" data-delete-id="${escapeHtml(item.id)}">Удалить</button>`,
+              `</div>`
+            ].join("");
+          } else if (!state.readOnly) {
+            actionsBlock = [
+              `<div class="expense-actions">`,
+              `<button class="icon-btn edit-btn" type="button" data-edit-id="${escapeHtml(item.id)}">Редактировать</button>`,
+              `<button class="icon-btn" type="button" data-delete-id="${escapeHtml(item.id)}">Удалить</button>`,
+              `</div>`
+            ].join("");
+          }
+          const delay = Math.min(280, idx * 40);
+          const isNew = item.id === state.lastAddedExpenseId;
+          const category = normalizeEntryCategory(item.category, item.type || "expense");
+          const type = getTypeFromCategory(category, item.type || "expense");
+          const typeLabel = getCategoryLabel(category).toLocaleUpperCase("ru-RU");
+          const typeBadgeClass = `badge ${getCategoryBadgeClass(category)}`;
+          const expenseId = escapeHtml(item.id);
+          return [
+            `<article class="expense expense-${type}${isNew ? " newly-added" : ""}" style="animation-delay:${delay}ms" data-expense-id="${expenseId}">`,
+            `<div class="expense-top">`,
+            `<div class="expense-amount">${escapeHtml(formatSignedMoney(item.amount, type))}</div>`,
+            `<span class="${typeBadgeClass}">${escapeHtml(typeLabel)}</span>`,
+            `</div>`,
+            orderInfo?.notes ? `<div class="expense-note">Заказ: ${escapeHtml(orderInfo.notes)}</div>` : "",
+            note,
+            photosBlock,
+            `<div class="expense-meta">`,
+            metaLeft,
+            actionsBlock,
+            `</div>`,
+            `</article>`
+          ].join("");
+        }).join("");
+
+        bindExpensePhotoHandlers();
+      }
+
+      function renderUserFilterOptions() {
+        if (!ui.userFilter || !ui.userFilterRow) {
+          return;
+        }
+        if (!state.isSuper) {
+          ui.userFilterRow.hidden = true;
+          ui.userFilter.innerHTML = "";
+          return;
+        }
+        const owners = [];
+        for (const item of state.expenses) {
+          const name = typeof item.owner === "string" ? item.owner.trim() : "";
+          if (name) {
+            owners.push(name);
+          }
+        }
+        const unique = Array.from(new Set(owners)).sort((a, b) => a.localeCompare(b, "ru", { sensitivity: "base" }));
+        const available = new Set(unique);
+        if (state.userFilter && !available.has(state.userFilter)) {
+          state.userFilter = "";
+        }
+        const options = [
+          `<option value="">Все пользователи</option>`,
+          ...unique.map((name) => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`)
+        ];
+        ui.userFilter.innerHTML = options.join("");
+        ui.userFilter.value = state.userFilter;
+        ui.userFilterRow.hidden = false;
+      }
+
+      function renderSuperUserOptions() {
+        if (!ui.superUserSelect || !ui.superUserRow) {
+          return;
+        }
+        if (!state.isSuper) {
+          const selfLogin = String(state.currentUsername || "").trim();
+          if (!selfLogin) {
+            ui.superUserRow.hidden = true;
+            ui.superUserSelect.innerHTML = "";
+            return;
+          }
+          ui.superUserSelect.innerHTML = `<option value="">${escapeHtml(selfLogin)}</option>`;
+          ui.superUserSelect.value = "";
+          ui.superUserSelect.classList.add("self-user-select");
+          ui.superUserSelect.disabled = true;
+          ui.superUserRow.hidden = false;
+          return;
+        }
+        ui.superUserSelect.classList.remove("self-user-select");
+        const options = [
+          ...state.superUsers.map((user) => {
+            const id = String(user.id || "");
+            const name = String(user.username || "");
+            if (!id || !name) {
+              return "";
+            }
+            return `<option value="${escapeHtml(id)}">${escapeHtml(name)}</option>`;
+          }).filter(Boolean)
+        ];
+        ui.superUserSelect.innerHTML = options.join("");
+        const available = new Set(state.superUsers.map((user) => String(user.id || "")));
+        if (state.superUserId && available.has(state.superUserId)) {
+          ui.superUserSelect.value = state.superUserId;
+        } else {
+          const currentUsername = String(state.currentUsername || "").trim().toLocaleLowerCase("ru-RU");
+          const currentUser = state.superUsers.find((user) => String(user.username || "").trim().toLocaleLowerCase("ru-RU") === currentUsername);
+          state.superUserId = currentUser ? String(currentUser.id || "") : "";
+          ui.superUserSelect.value = state.superUserId;
+        }
+        ui.superUserSelect.disabled = false;
+        ui.superUserRow.hidden = false;
+      }
+
+      async function loadSuperUsers() {
+        if (!state.isSuper) {
+          state.superUsers = [];
+          renderSuperUserOptions();
+          return;
+        }
+        try {
+          const response = await fetch(`${API_URL}?action=users`, {
+            method: "GET",
+            credentials: "same-origin",
+            cache: "no-store",
+            headers: { "Accept": "application/json" }
+          });
+          if (!response.ok) {
+            if (response.status === 401) {
+              showAuthGate("Нужно войти в аккаунт Расходы");
+            }
+            return;
+          }
+          const payload = await response.json().catch(() => ({}));
+          if (!payload || !Array.isArray(payload.users)) {
+            return;
+          }
+          state.superUsers = payload.users
+            .map((user) => ({
+              id: String(user?.id || ""),
+              username: String(user?.username || "").trim()
+            }))
+            .filter((user) => user.id && user.username)
+            .sort((a, b) => a.username.localeCompare(b.username, "ru", { sensitivity: "base" }));
+          renderSuperUserOptions();
+        } catch (error) {
+          // ignore
+        }
+      }
+
+      function getSelectedSuperUser() {
+        const id = String(ui.superUserSelect?.value || state.superUserId || "");
+        if (!id) {
+          return null;
+        }
+        const match = state.superUsers.find((user) => String(user.id) === id);
+        if (!match) {
+          return null;
+        }
+        return {
+          id: Number(id),
+          username: match.username
+        };
+      }
+
+      function loadFromStorage() {
+        try {
+          if (state.isSuper) {
+            return;
+          }
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) {
+            return;
+          }
+          const parsed = JSON.parse(raw);
+          const source = Array.isArray(parsed) ? parsed : parsed.expenses;
+          if (!Array.isArray(source)) {
+            return;
+          }
+          state.expenses = source
+            .map(normalizeExpense)
+            .filter(Boolean)
+            .sort((a, b) => sortByDateDesc(a, b));
+        } catch (error) {
+          showToast("Не удалось прочитать локальные данные");
+        }
+      }
+
+      function persist() {
+        persistLocalOnly();
+        if (state.readOnly) {
+          return;
+        }
+        void saveToServer(state.expenses);
+      }
+
+      function persistLocalOnly() {
+        try {
+          if (state.isSuper) {
+            return;
+          }
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 1, expenses: state.expenses }));
+        } catch (error) {
+          showToast("Ошибка локального сохранения");
+        }
+      }
+
+      async function loadFromServer() {
+        try {
+          const response = await fetch(API_URL, {
+            method: "GET",
+            credentials: "same-origin",
+            cache: "no-store",
+            headers: { "Accept": "application/json" }
+          });
+          if (!response.ok) {
+            if (response.status === 401) {
+              showAuthGate("Нужно войти в аккаунт Расходы");
+            }
+            return false;
+          }
+
+          const payload = await response.json();
+          if (!payload || !Array.isArray(payload.expenses)) {
+            return false;
+          }
+
+          state.expenses = payload.expenses
+            .map(normalizeExpense)
+            .filter(Boolean)
+            .sort((a, b) => sortByDateDesc(a, b));
+          state.rev = Math.max(0, Number(payload.rev) || 0);
+          return true;
+        } catch (error) {
+          return false;
+        }
+      }
+
+      async function fetchServerExpenses() {
+        try {
+          const response = await fetch(API_URL, {
+            method: "GET",
+            credentials: "same-origin",
+            cache: "no-store",
+            headers: { "Accept": "application/json" }
+          });
+          if (!response.ok) {
+            if (response.status === 401) {
+              showAuthGate("Нужно войти в аккаунт Расходы");
+            }
+            return null;
+          }
+          const payload = await response.json();
+          if (!payload || !Array.isArray(payload.expenses)) {
+            return null;
+          }
+          return payload.expenses
+            .map(normalizeExpense)
+            .filter(Boolean);
+        } catch (error) {
+          return null;
+        }
+      }
+
+      async function saveToServer(expenses) {
+        try {
+          if (state.readOnly) {
+            showToast("Режим просмотра: изменения недоступны");
+            return false;
+          }
+          const response = await fetch(API_URL, {
+            method: "POST",
+            credentials: "same-origin",
+            headers: { "Content-Type": "application/json", "Accept": "application/json" },
+            body: JSON.stringify({ expenses, rev: state.rev })
+          });
+
+          if (!response.ok) {
+            if (response.status === 409) {
+              // Another device/tab (or an admin/photo change) advanced the data.
+              // Reload the authoritative state instead of overwriting it.
+              const conflict = await response.json().catch(() => null);
+              if (conflict && Array.isArray(conflict.expenses)) {
+                state.expenses = conflict.expenses
+                  .map(normalizeExpense)
+                  .filter(Boolean)
+                  .sort((a, b) => sortByDateDesc(a, b));
+                state.rev = Math.max(0, Number(conflict.rev) || 0);
+                persistLocalOnly();
+                render();
+              }
+              showToast("Список обновлён на другом устройстве — перезагружено");
+              return false;
+            }
+            if (response.status === 403) {
+              showToast("Суперпользователь в режиме просмотра");
+              return false;
+            }
+            if (response.status === 401) {
+              showAuthGate("Сессия завершена, войдите снова");
+            }
+            showToast("Сервер недоступен, сохранено локально");
+            return false;
+          }
+
+          const payload = await response.json();
+          if (!payload || payload.ok !== true || !Array.isArray(payload.expenses)) {
+            showToast("Ошибка синхронизации, сохранено локально");
+            return false;
+          }
+
+          state.expenses = payload.expenses
+            .map(normalizeExpense)
+            .filter(Boolean)
+            .sort((a, b) => sortByDateDesc(a, b));
+          state.rev = Math.max(0, Number(payload.rev) || 0);
+          persistLocalOnly();
+          render();
+          return true;
+        } catch (error) {
+          showToast("Сервер недоступен, сохранено локально");
+          return false;
+        }
+      }
+
+      async function uploadPhotos(expenseId, files, ownerId = 0) {
+        if (state.readOnly && !state.isSuper) {
+          return [];
+        }
+        const list = Array.from(files || []).slice(0, 6);
+        if (list.length === 0) {
+          return [];
+        }
+
+        const formData = new FormData();
+        formData.append("action", "upload_photos");
+        formData.append("expense_id", String(expenseId));
+        if (state.isSuper) {
+          const resolvedOwner = Number.isFinite(Number(ownerId)) && Number(ownerId) > 0
+            ? Number(ownerId)
+            : Number(getSelectedSuperUser()?.id || 0);
+          if (resolvedOwner > 0) {
+            formData.append("owner_id", String(resolvedOwner));
+          }
+        }
+        for (const file of list) {
+          formData.append("photos", file, file.name || "photo.jpg");
+        }
+        console.log("[rashody] upload_photos: start", {
+          expenseId: String(expenseId),
+          ownerId: state.isSuper ? (getSelectedSuperUser()?.id || 0) : 0,
+          files: list.map((f) => ({ name: f?.name, size: f?.size, type: f?.type }))
+        });
+
+        try {
+          const response = await fetch(API_URL, {
+            method: "POST",
+            credentials: "same-origin",
+            body: formData
+          });
+
+          if (!response.ok) {
+            if (response.status === 401) {
+              showAuthGate("Сессия завершена, войдите снова");
+            }
+            console.warn("[rashody] upload_photos: http_error", response.status);
+            showToast("Ошибка загрузки фото");
+            return [];
+          }
+
+          const payload = await response.json().catch(() => ({}));
+          console.log("[rashody] upload_photos: response", payload);
+          if (!payload || payload.ok !== true || !Array.isArray(payload.photos)) {
+            const details = Array.isArray(payload?.details) ? payload.details.join(", ") : "";
+            console.warn("upload_photos rejected", payload);
+            showToast(details ? `Фото не приняты сервером: ${details}` : "Фото не приняты сервером");
+            return [];
+          }
+
+          if (!state.isSuper && payload.rev !== undefined) {
+            state.rev = Math.max(0, Number(payload.rev) || 0);
+          }
+          return uniquePhotos(payload.photos.map((item) => String(item || "")));
+        } catch (error) {
+          console.error("[rashody] upload_photos: exception", error);
+          showToast("Сервер недоступен для загрузки фото");
+          return [];
+        }
+      }
+
+      function uniquePhotos(items) {
+        const out = [];
+        const seen = new Set();
+        for (const item of items) {
+          const src = sanitizePhotoPath(item);
+          if (!src || seen.has(src)) {
+            continue;
+          }
+          seen.add(src);
+          out.push(src);
+        }
+        return out;
+      }
+
+      function sanitizePhotoPath(value) {
+        let src = String(value || "").trim().replaceAll("\\", "/");
+        if (!src) {
+          return "";
+        }
+        src = src.replace(/^https?:\/\/[^/]+\//i, "");
+        src = src.replace(/^\/+/, "");
+        const prefix = "uploads/rashody/";
+        const lower = src.toLowerCase();
+        const idx = lower.indexOf(prefix);
+        if (idx === -1) {
+          return "";
+        }
+        src = prefix + src.slice(idx + prefix.length);
+        if (src.includes("..")) {
+          return "";
+        }
+        return src.slice(0, 255);
+      }
+
+      function normalizeExpense(input) {
+        if (!input || typeof input !== "object") {
+          return null;
+        }
+        const amount = Number(input.amount);
+        const date = typeof input.date === "string" ? input.date.slice(0, 10) : "";
+        const rawType = input.type === "income" ? "income" : "expense";
+        const category = normalizeEntryCategory(input.category, rawType);
+        const type = getTypeFromCategory(category, rawType);
+        if (!Number.isFinite(amount) || amount <= 0 || !isValidIsoDate(date)) {
+          return null;
+        }
+        const note = String(input.note || "").trim();
+        const photos = Array.isArray(input.photos) ? uniquePhotos(input.photos) : [];
+        const orderId = normalizeOrderIdInput(input.orderId || input.order_id || "");
+        const orderClientName = String(input.order_client_name || input.orderClientName || "").slice(0, 120);
+        const orderNotes = String(input.order_notes || input.orderNotes || "").slice(0, 400);
+        const owner = typeof input.owner === "string" ? input.owner.slice(0, 50) : "";
+        const ownerId = Number.isFinite(Number(input.owner_id)) ? Number(input.owner_id) : 0;
+        return {
+          id: input.id ? String(input.id) : makeId(),
+          type,
+          category,
+          amount: round2(amount),
+          date,
+          note,
+          photos,
+          orderId,
+          orderClientName,
+          orderNotes,
+          owner,
+          ownerId,
+          createdAt: typeof input.createdAt === "string" ? input.createdAt : new Date().toISOString()
+        };
+      }
+
+      function filterExpenses(expenses, period, periodFrom, periodTo) {
+        const now = startOfDay(new Date());
+        const today = toIso(now);
+        const weekStart = new Date(now);
+        weekStart.setDate(now.getDate() - 6);
+        const currentMonth = now.getMonth();
+        const currentYear = now.getFullYear();
+        const from = isValidIsoDate(periodFrom) ? parseDate(periodFrom) : null;
+        const to = isValidIsoDate(periodTo) ? parseDate(periodTo) : null;
+        const rangeStart = from && to && from > to ? to : from;
+        const rangeEnd = from && to && from > to ? from : to;
+
+        return expenses.filter((item) => {
+          if (period === "today") {
+            return item.date === today;
+          }
+          if (period === "week") {
+            const d = parseDate(item.date);
+            return d >= weekStart && d <= now;
+          }
+          if (period === "month") {
+            const d = parseDate(item.date);
+            return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+          }
+          if (period === "custom") {
+            const d = parseDate(item.date);
+            if (rangeStart && d < rangeStart) {
+              return false;
+            }
+            if (rangeEnd && d > rangeEnd) {
+              return false;
+            }
+            return true;
+          }
+          return true;
+        });
+      }
+
+      function filterExpensesByQuery(expenses, query) {
+        const needle = normalizeSearchText(query);
+        if (!needle) {
+          return expenses;
+        }
+
+        return expenses.filter((item) => {
+          const haystack = [
+            item.note,
+            item.date,
+            item.orderId,
+            item.orderClientName,
+            item.orderNotes,
+            formatDate(item.date),
+            getTypeLabel(item.type),
+            getCategoryLabel(normalizeEntryCategory(item.category, item.type || "expense")),
+            String(item.amount),
+            formatMoney(item.amount),
+            formatSignedMoney(item.amount, getTypeFromCategory(normalizeEntryCategory(item.category, item.type || "expense"), item.type || "expense"))
+          ].join(" ");
+          return normalizeSearchText(haystack).includes(needle);
+        });
+      }
+
+      function filterExpensesByType(expenses, typeFilter) {
+        if (typeFilter !== "income" && typeFilter !== "expense") {
+          return expenses;
+        }
+        return expenses.filter((item) => item.type === typeFilter);
+      }
+
+      function filterExpensesByCategory(expenses, categoryFilter) {
+        const category = String(categoryFilter || "").trim();
+        if (!category) {
+          return expenses;
+        }
+        return expenses.filter((item) => normalizeEntryCategory(item.category, item.type || "expense") === category);
+      }
+
+      function filterExpensesByUser(expenses, userFilter) {
+        if (!state.isSuper || !userFilter) {
+          return expenses;
+        }
+        return expenses.filter((item) => String(item.owner || "") === userFilter);
+      }
+
+      function renderNoteSuggestions() {
+        if (!ui.noteSuggestions || !ui.note) {
+          return;
+        }
+
+        const matches = getMatchingNoteSuggestions(ui.note.value);
+        if (matches.length === 0) {
+          hideNoteSuggestions();
+          return;
+        }
+
+        ui.noteSuggestions.hidden = false;
+        ui.noteSuggestions.innerHTML = [
+          `<div class="suggestions-title">Ранее использованные комментарии</div>`,
+          ...matches.map((text) => `<button type="button" class="suggestion-btn" data-note-suggestion="${escapeHtml(text)}">${escapeHtml(text)}</button>`)
+        ].join("");
+      }
+
+      function hideNoteSuggestions() {
+        if (!ui.noteSuggestions) {
+          return;
+        }
+        ui.noteSuggestions.hidden = true;
+        ui.noteSuggestions.innerHTML = "";
+      }
+
+      function applyNoteSuggestion(value) {
+        if (!ui.note) {
+          return;
+        }
+        ui.note.value = String(value || "");
+        autoGrowNote();
+        hideNoteSuggestions();
+        ui.note.focus();
+        const len = ui.note.value.length;
+        if (typeof ui.note.setSelectionRange === "function") {
+          ui.note.setSelectionRange(len, len);
+        }
+      }
+
+      function getMatchingNoteSuggestions(query) {
+        const needle = normalizeSearchText(query);
+        if (!needle) {
+          return [];
+        }
+
+        const unique = new Set();
+        for (const item of state.expenses) {
+          const text = String(item?.note || "").trim();
+          if (!text) {
+            continue;
+          }
+          const normalized = normalizeSearchText(text);
+          if (!normalized || normalized === needle || !normalized.includes(needle)) {
+            continue;
+          }
+          unique.add(text);
+        }
+
+        return Array.from(unique)
+          .sort((a, b) => a.localeCompare(b, "ru-RU"))
+          .slice(0, 6);
+      }
+
+      function formatMoney(value) {
+        return new Intl.NumberFormat("ru-RU", {
+          style: "currency",
+          currency: "RUB",
+          maximumFractionDigits: 2
+        }).format(round2(value));
+      }
+
+      function formatSignedMoney(amount, type) {
+        const safeAmount = Math.abs(round2(amount));
+        const normalizedType = type === "income" ? "income" : "expense";
+        const sign = normalizedType === "income" ? "+" : "-";
+        return `${sign}${formatMoney(safeAmount)}`;
+      }
+
+      function getSignedAmount(item) {
+        return getTypeFromCategory(normalizeEntryCategory(item?.category, item?.type || "expense"), item?.type || "expense") === "income"
+          ? item.amount
+          : -item.amount;
+      }
+
+      function getTypeLabel(type) {
+        return type === "income" ? "Доход" : "Расход";
+      }
+
+      function normalizeCategoryAliasKey(value) {
+        return String(value || "")
+          .trim()
+          .toLocaleLowerCase("ru-RU")
+          .replace(/[\s_-]+/g, "");
+      }
+
+      function resolveKnownCategory(category) {
+        const raw = String(category || "").trim();
+        if (!raw) {
+          return "";
+        }
+        if (ENTRY_CATEGORY_KEYS.includes(raw)) {
+          return raw;
+        }
+        const lowered = raw.toLocaleLowerCase("ru-RU");
+        for (const key of ENTRY_CATEGORY_KEYS) {
+          if (key.toLocaleLowerCase("ru-RU") === lowered) {
+            return key;
+          }
+        }
+        return ENTRY_CATEGORY_ALIAS_MAP[normalizeCategoryAliasKey(raw)] || "";
+      }
+
+      function normalizeEntryCategory(category, fallbackType = "expense") {
+        const raw = String(category || "").trim();
+        if (!raw) {
+          return fallbackType === "income" ? "income" : "expense";
+        }
+        const known = resolveKnownCategory(raw);
+        if (known) {
+          if (known === "expense" && fallbackType === "income") {
+            // Legacy fix: historical rows could store income type with default expense category.
+            return "income";
+          }
+          return known;
+        }
+        return fallbackType === "income" ? "income" : "expense";
+      }
+
+      function getTypeFromCategory(category, fallbackType = "expense") {
+        const known = resolveKnownCategory(category);
+        return known === "income" ? "income" : "expense";
+      }
+
+      function getCategoryLabel(category) {
+        const normalized = normalizeEntryCategory(category, "expense");
+        const known = resolveKnownCategory(normalized);
+        if (known) {
+          return ENTRY_CATEGORIES[known] || ENTRY_CATEGORIES.expense;
+        }
+        return normalized;
+      }
+
+      function getCategoryBadgeClass(category) {
+        const known = resolveKnownCategory(category);
+        return `badge-category-${known || "expense"}`;
+      }
+
+      function formatDate(isoDate) {
+        return parseDate(isoDate).toLocaleDateString("ru-RU", {
+          weekday: "short",
+          day: "2-digit",
+          month: "short",
+          year: "numeric"
+        });
+      }
+
+      function formatCreatedTime(value) {
+        const dt = new Date(String(value || ""));
+        if (Number.isNaN(dt.valueOf())) {
+          return "";
+        }
+        return dt.toLocaleTimeString("ru-RU", {
+          hour: "2-digit",
+          minute: "2-digit"
+        });
+      }
+
+      function getRandomAddExpenseMessage() {
+        const i = Math.floor(Math.random() * ADD_EXPENSE_MESSAGES.length);
+        return ADD_EXPENSE_MESSAGES[i];
+      }
+
+      function showToast(message, durationMs = 1700, variantClass = "") {
+        ui.toast.classList.remove("toast-auth-invalid");
+        if (variantClass) {
+          ui.toast.classList.add(variantClass);
+        }
+        ui.toast.textContent = message;
+        ui.toast.classList.add("show");
+        clearTimeout(showToast.timer);
+        showToast.timer = setTimeout(() => {
+          ui.toast.classList.remove("show");
+          if (variantClass) {
+            ui.toast.classList.remove(variantClass);
+          }
+        }, durationMs);
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#39;");
+      }
+
+      function normalizeSearchText(value) {
+        return String(value || "")
+          .toLocaleLowerCase("ru-RU")
+          .replace(/\s+/g, " ")
+          .trim();
+      }
+
+      function onAmountInput(event) {
+        const input = event?.target || ui.amount;
+        if (!input) {
+          return;
+        }
+
+        const rawValue = String(input.value || "");
+        const caret = typeof input.selectionStart === "number" ? input.selectionStart : rawValue.length;
+        const digitsBeforeCaret = countDigitsBeforeIndex(rawValue, caret);
+        const formatted = formatAmountForInput(rawValue);
+        input.value = formatted;
+
+        const nextCaret = findCaretByDigitPosition(formatted, digitsBeforeCaret);
+        try {
+          input.setSelectionRange(nextCaret, nextCaret);
+        } catch (error) {
+          // ignore unsupported input types
+        }
+      }
+
+      function countDigitsBeforeIndex(value, endIndex) {
+        const part = String(value || "").slice(0, Math.max(0, endIndex));
+        const matches = part.match(/\d/g);
+        return matches ? matches.length : 0;
+      }
+
+      function findCaretByDigitPosition(value, digitPos) {
+        if (digitPos <= 0) {
+          return 0;
+        }
+        let seen = 0;
+        for (let i = 0; i < value.length; i += 1) {
+          if (/\d/.test(value[i])) {
+            seen += 1;
+            if (seen >= digitPos) {
+              return i + 1;
+            }
+          }
+        }
+        return value.length;
+      }
+
+      function parseAmountValue(value) {
+        const normalized = String(value || "")
+          .replace(/\s+/g, "")
+          .replace(",", ".");
+        const parsed = Number(normalized);
+        return Number.isFinite(parsed) ? parsed : NaN;
+      }
+
+      function formatAmountForInput(value) {
+        const raw = String(value || "")
+          .replace(/\s+/g, "")
+          .replace(",", ".")
+          .replace(/[^0-9.]/g, "");
+
+        if (raw === "") {
+          return "";
+        }
+
+        const parts = raw.split(".");
+        const integerPart = parts[0].replace(/^0+(?=\d)/, "");
+        const grouped = (integerPart || "0").replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+
+        if (parts.length === 1) {
+          return grouped;
+        }
+
+        const decimalPart = parts.slice(1).join("").slice(0, 2);
+        return decimalPart.length > 0 ? `${grouped}.${decimalPart}` : `${grouped}.`;
+      }
+
+      function round2(value) {
+        return Math.round((value + Number.EPSILON) * 100) / 100;
+      }
+
+      function isValidIsoDate(value) {
+        return /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(parseDate(value).valueOf());
+      }
+
+      function parseDate(isoDate) {
+        return new Date(`${isoDate}T00:00:00`);
+      }
+
+      function todayIso() {
+        const now = new Date();
+        const offsetMs = now.getTimezoneOffset() * 60000;
+        return new Date(now.getTime() - offsetMs).toISOString().slice(0, 10);
+      }
+
+      function toIso(date) {
+        const local = new Date(date);
+        const offsetMs = local.getTimezoneOffset() * 60000;
+        return new Date(local.getTime() - offsetMs).toISOString().slice(0, 10);
+      }
+
+      function startOfDay(date) {
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+      }
+
+      function scrollToElement(element) {
+        if (!element || typeof element.scrollIntoView !== "function") {
+          return;
+        }
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      function sortByDateDesc(a, b) {
+        const dateCmp = String(b.date || "").localeCompare(String(a.date || ""));
+        if (dateCmp !== 0) {
+          return dateCmp;
+        }
+
+        const aTime = Date.parse(String(a.createdAt || "")) || 0;
+        const bTime = Date.parse(String(b.createdAt || "")) || 0;
+        if (bTime !== aTime) {
+          return bTime - aTime;
+        }
+
+        return String(b.id || "").localeCompare(String(a.id || ""));
+      }
+
+      function makeId() {
+        return `${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+      }
+
+    })();
+  </script>
+</body>
+</html>
+
+

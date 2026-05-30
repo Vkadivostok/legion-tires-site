@@ -1,0 +1,20 @@
+{
+  "name": "v RASHOD",
+  "short_name": "RASHOD",
+  "description": "Расходы и доходы",
+  "start_url": "./%D0%A0%D0%B0%D1%81%D1%85%D0%BE%D0%B4%D1%8B.html?v=2026050102",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#07111d",
+  "theme_color": "#111111",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "Logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}
+
+

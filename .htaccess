@@ -1,0 +1,52 @@
+DirectoryIndex index.html index.php
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    RewriteCond %{REQUEST_METHOD} =GET
+    RewriteCond %{THE_REQUEST} \s/+(.+?)\.php[?\s] [NC]
+    RewriteCond %1 !^(rashody_api|shift_api|warehouse_api|zakaz_api|log_navigation)$ [NC]
+    RewriteRule ^(.+)\.php$ /$1 [R=301,L,NE]
+
+    RewriteCond %{REQUEST_METHOD} =GET
+    RewriteCond %{THE_REQUEST} \s/+(.+?)\.html[?\s] [NC]
+    RewriteCond %1 !^(shinomontazh|Zakaz)$ [NC]
+    RewriteRule ^(.+)\.html$ /$1 [R=301,L,NE]
+
+    RewriteCond %{THE_REQUEST} \s/+Zakaz\.html[?\s] [NC,OR]
+    RewriteCond %{THE_REQUEST} \s/+shinomontazh\.html[?\s] [NC]
+    RewriteRule ^(Zakaz|shinomontazh)\.html$ /shinomontazh [R=301,L]
+
+    RewriteRule ^shinomontazh/?$ shinomontazh.html [L]
+
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{DOCUMENT_ROOT}/$1.php -f
+    RewriteRule ^(.+?)/?$ $1.php [L]
+
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+    RewriteRule ^(.+?)/?$ $1.html [L]
+</IfModule>
+
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/avif "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+</IfModule>
+
+<IfModule mod_headers.c>
+    <FilesMatch "\.(html|htm|js|json)$">
+        Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+        Header set Pragma "no-cache"
+        Header set Expires "0"
+    </FilesMatch>
+
+    <FilesMatch "\.(jpg|jpeg|png|gif|webp|avif|svg)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+</IfModule>

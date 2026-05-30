@@ -1,4 +1,8 @@
-крутится без надписей.mp4
-много надписей.mp4
-На машину.mp4
-старое новое колесо.mp4
+core/config.local.php
+
+cache/
+Uploads/
+*.log
+
+*.zip
+~$*

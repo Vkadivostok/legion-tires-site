@@ -1,0 +1,15 @@
+{
+  "name": "1.diskzakaz.ru",
+  "short_name": "Diszakaz",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#1c2526",
+  "theme_color": "#00b4d8",
+  "icons": [
+    {
+      "src": "Logo.jpg",
+      "type": "image/jpeg",
+      "sizes": "512x512"
+    }
+  ]
+}
